@@ -1,13 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="Hello World, Ando"
-    />
+    android:layout_height="fill_parent">
+    <!-- Original text -->
+    <TextView
+        android:layout_weight=".30"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Testing"/>
+    <TextView
+        android:id="@+id/textOriginal"
+        android:layout_weight=".30"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text=""/>
+    <!-- Control buttons -->
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:background="@android:drawable/bottom_bar"
+        android:paddingLeft="4.0dip"
+        android:paddingTop="5.0dip"
+        android:paddingRight="4.0dip"
+        android:paddingBottom="1.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".15"
+        android:gravity="center_vertical"
+        style="@android:style/ButtonBar">
+        <!-- Copy -->
+        <Button
+            android:id="@+id/copyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Copy"/>
+        <!-- Prev -->
+        <Button
+            android:id="@+id/prevButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Previous"/>
+        <!-- Next -->
+        <Button
+            android:id="@+id/nextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Next"/>
+    </LinearLayout>
+    <!-- Translated text -->
+    <EditText
+        android:id="@+id/editTranslated"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".50"
+        android:text="Translated"/>
+    <!-- Status line -->
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:background="@android:drawable/bottom_bar"
+        android:paddingLeft="4.0dip"
+        android:paddingTop="5.0dip"
+        android:paddingRight="4.0dip"
+        android:paddingBottom="1.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".05">
+        <!-- Total messages -->
+        <TextView
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight=".30"
+            android:text="Total:"/>
+        <TextView
+            android:id="@+id/statusTotal"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight=".20"
+            android:text="N"/>
+        <!-- Translated messages -->
+        <TextView
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight=".30"
+            android:text="Translated:"/>
+        <TextView
+            android:id="@+id/statusTranslated"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight=".20"
+            android:text="M"/>
+    </LinearLayout>
 </LinearLayout>
-
