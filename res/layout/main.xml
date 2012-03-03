@@ -1,100 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    <!-- Original text -->
-    <TextView
-        android:layout_weight=".30"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Testing"/>
-    <TextView
-        android:id="@+id/textOriginal"
-        android:layout_weight=".30"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text=""/>
-    <!-- Control buttons -->
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
-        android:background="@android:drawable/bottom_bar"
-        android:paddingLeft="4.0dip"
-        android:paddingTop="5.0dip"
-        android:paddingRight="4.0dip"
-        android:paddingBottom="1.0dip"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight=".15"
-        android:gravity="center_vertical"
-        style="@android:style/ButtonBar">
-        <!-- Copy -->
+        android:layout_height="wrap_content">
         <Button
             android:id="@+id/copyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Copy"/>
-        <!-- Prev -->
+            android:text="Copy"
+            android:gravity="center"
+            android:layout_weight="0.30" />
         <Button
             android:id="@+id/prevButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Previous"/>
-        <!-- Next -->
+            android:text="Previous"
+            android:gravity="center"
+            android:layout_weight="0.20"
+            android:layout_gravity="right" />
         <Button
             android:id="@+id/nextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Next"/>
+            android:text="Next"
+            android:gravity="center"
+            android:layout_weight="0.2"
+            android:layout_gravity="right" />
     </LinearLayout>
-    <!-- Translated text -->
+    <TextView
+        android:id="@+id/textOriginal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
     <EditText
         android:id="@+id/editTranslated"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight=".50"
-        android:text="Translated"/>
-    <!-- Status line -->
+        android:text="EditText"
+        android:textSize="18sp" />
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
-        android:background="@android:drawable/bottom_bar"
-        android:paddingLeft="4.0dip"
-        android:paddingTop="5.0dip"
-        android:paddingRight="4.0dip"
-        android:paddingBottom="1.0dip"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight=".05">
-        <!-- Total messages -->
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
         <TextView
-            android:layout_width="0.0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight=".30"
-            android:text="Total:"/>
+            android:id="@+id/totalLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total:"
+            android:layout_weight="0.3" />
         <TextView
-            android:id="@+id/statusTotal"
-            android:layout_width="0.0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight=".20"
-            android:text="N"/>
-        <!-- Translated messages -->
+            android:id="@+id/totalValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="N"
+            android:layout_weight="0.2" />
         <TextView
-            android:layout_width="0.0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight=".30"
-            android:text="Translated:"/>
+            android:id="@+id/transLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Translated:"
+            android:layout_weight="0.3" />
         <TextView
-            android:id="@+id/statusTranslated"
-            android:layout_width="0.0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight=".20"
-            android:text="M"/>
+            android:id="@+id/transValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="M"
+            android:layout_weight="0.2" />
     </LinearLayout>
 </LinearLayout>
