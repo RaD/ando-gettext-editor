@@ -1,6 +1,8 @@
 package ru.securelayer.rad.ando;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -15,6 +17,12 @@ import android.widget.TextView;
 import android.widget.EditText;
 
 import com.kaloer.filepicker.FilePickerActivity;
+import org.fedorahosted.tennera.jgettext.Catalog;
+import org.fedorahosted.tennera.jgettext.Message;
+import org.fedorahosted.tennera.jgettext.catalog.parse.ExtendedCatalogParser;
+import org.fedorahosted.tennera.jgettext.catalog.parse.ParseException;
+import antlr.RecognitionException;
+import antlr.TokenStreamException;
 
 import ru.securelayer.rad.ando.R;
 
@@ -24,6 +32,8 @@ public class AndoMain extends Activity implements OnClickListener
     private TextView textOriginal;
     private EditText editTranslated;
     private Button openButton;
+    private int entryCount = 0;
+    private int obsoleteCount = 0;
 
     /** Called when the activity is first created. */
     @Override
@@ -52,7 +62,7 @@ public class AndoMain extends Activity implements OnClickListener
             // intent.putExtra(FilePickerActivity.EXTRA_FILE_PATH, Environment.getExternalStorageDirectory());
             // only make .po files visible
             ArrayList<String> extensions = new ArrayList<String>();
-            extensions.add(".po");
+            //extensions.add(".po");
             intent.putExtra(FilePickerActivity.EXTRA_ACCEPTED_FILE_EXTENSIONS, extensions);
             // start the activity
             startActivityForResult(intent, REQUEST_PICK_FILE);
@@ -62,15 +72,33 @@ public class AndoMain extends Activity implements OnClickListener
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             switch(requestCode) {
             case REQUEST_PICK_FILE:
-                if(data.hasExtra(FilePickerActivity.EXTRA_FILE_PATH)) {
+                if (data.hasExtra(FilePickerActivity.EXTRA_FILE_PATH)) {
                     // Get the file path
-                    File f = new File(data.getStringExtra(FilePickerActivity.EXTRA_FILE_PATH));
+                    try {
+                        try {
+                            File poFile = new File(data.getStringExtra(FilePickerActivity.EXTRA_FILE_PATH));
+                                                // Parse a file
+                            ExtendedCatalogParser parser = new ExtendedCatalogParser(poFile);
+                            try {
+                                parser.catalog();
+                            } catch (RecognitionException ex) {}
+                              catch (TokenStreamException ex) {}
+                            Catalog catalog = parser.getCatalog();
+                            // Iterate of file's items.
+                            for (Message m : catalog){
+                                    entryCount++;
+                                    if(m.isObsolete()) obsoleteCount++;
+                            }
+                            // Set the file path text view
+                            editTranslated.setText(poFile.getPath());
+                        } catch(FileNotFoundException ex) {}
+                    } catch(IOException ex) {}
+                    //R.id.totalValue.setText(entryCount);
+                    //R.id.transValue.setText(obsoleteCount);
 
-                    // Set the file path text view
-                    editTranslated.setText(f.getPath());
                 }
             }
         }
