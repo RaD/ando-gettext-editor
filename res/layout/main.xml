@@ -8,19 +8,26 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
         <Button
+            android:id="@+id/openButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Open"
+            android:gravity="center"
+            android:layout_weight="0.25" />
+        <Button
             android:id="@+id/copyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Copy"
             android:gravity="center"
-            android:layout_weight="0.30" />
+            android:layout_weight="0.25" />
         <Button
             android:id="@+id/prevButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Previous"
             android:gravity="center"
-            android:layout_weight="0.20"
+            android:layout_weight="0.25"
             android:layout_gravity="right" />
         <Button
             android:id="@+id/nextButton"
@@ -28,7 +35,7 @@
             android:layout_height="wrap_content"
             android:text="Next"
             android:gravity="center"
-            android:layout_weight="0.2"
+            android:layout_weight="0.25"
             android:layout_gravity="right" />
     </LinearLayout>
     <TextView
