@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.EditText;
 
+import com.kaloer.filepicker.FilePickerActivity;
+
 import ru.securelayer.rad.ando.R;
 
 public class AndoMain extends Activity implements OnClickListener
