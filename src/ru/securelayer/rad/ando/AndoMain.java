@@ -110,13 +110,15 @@ public class AndoMain extends Activity implements OnClickListener
                             } catch (RecognitionException ex) {}
                               catch (TokenStreamException ex) {}
                             catalog = parser.getCatalog();
-                            // // Iterate of file's items.
+                            // Iterate of file's items.
                             for (Message m : catalog){
                                 messages.add(m);
                             }
                             iterator = messages.listIterator();
                             // Set the file path text view
                             textFileName.setText(poFile.getPath());
+                            // Show first token
+                            nextMessage();
                         } catch(FileNotFoundException ex) {}
                     } catch(IOException ex) {}
                     //R.id.totalValue.setText(entryCount);

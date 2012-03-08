@@ -12,7 +12,7 @@
             android:id="@+id/textFileTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="Resourse:" />
         <TextView
             android:id="@+id/textFileName"
             android:layout_width="wrap_content"
