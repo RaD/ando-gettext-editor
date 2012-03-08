@@ -112,7 +112,9 @@ public class AndoMain extends Activity implements OnClickListener
                             catalog = parser.getCatalog();
                             // Iterate of file's items.
                             for (Message m : catalog){
-                                messages.add(m);
+                                if (! m.isHeader()) {
+                                    messages.add(m);
+                                }
                             }
                             iterator = messages.listIterator();
                             // Set the file path text view
