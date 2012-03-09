@@ -37,6 +37,7 @@ public class AndoMain extends Activity implements OnClickListener
     private Button openButton;
     private Button prevButton;
     private Button nextButton;
+    private Button copyButton;
     private Catalog catalog;
     private ArrayList<Message> messages;
     private ListIterator<Message> iterator;
@@ -56,14 +57,14 @@ public class AndoMain extends Activity implements OnClickListener
         openButton = (Button) findViewById(R.id.openButton);
         prevButton = (Button) findViewById(R.id.prevButton);
         nextButton = (Button) findViewById(R.id.nextButton);
+        copyButton = (Button) findViewById(R.id.copyButton);
 
         textFileName.setText("... Choose a file ...");
-        textOriginal.setText("Hello, dude!");
-        editTranslated.setText("Привет, чувак!");
 
         openButton.setOnClickListener(this);
         prevButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
+        copyButton.setOnClickListener(this);
 
         messages = new ArrayList<Message>();
     }
@@ -79,7 +80,7 @@ public class AndoMain extends Activity implements OnClickListener
             // intent.putExtra(FilePickerActivity.EXTRA_FILE_PATH, Environment.getExternalStorageDirectory());
             // only make .po files visible
             ArrayList<String> extensions = new ArrayList<String>();
-            //extensions.add(".po");
+            extensions.add(".po");
             intent.putExtra(FilePickerActivity.EXTRA_ACCEPTED_FILE_EXTENSIONS, extensions);
             // start the activity
             startActivityForResult(intent, REQUEST_PICK_FILE);
@@ -89,6 +90,9 @@ public class AndoMain extends Activity implements OnClickListener
             break;
         case R.id.nextButton:
             nextMessage();
+            break;
+        case R.id.copyButton:
+            msgstrCopy();
             break;
         }
     }
@@ -145,5 +149,9 @@ public class AndoMain extends Activity implements OnClickListener
     protected void fillMsgWidgets(Message message) {
         textOriginal.setText(message.getMsgid());
         editTranslated.setText(message.getMsgstr());
+    }
+
+    protected void msgstrCopy() {
+        editTranslated.setText(textOriginal.getText());
     }
 }
