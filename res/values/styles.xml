@@ -1,4 +1,10 @@
 <resources>
+    <style name="FileResource">
+    </style>
+
+    <style name="StatusLine">
+    </style>
+
     <style name="MsgIdWidget">
         <item name="android:background">@drawable/msgid_widget</item>
         <item name="android:layout_marginTop">10sp</item>

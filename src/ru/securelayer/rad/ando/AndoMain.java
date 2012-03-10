@@ -11,18 +11,21 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
 import android.content.Intent;
+import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.kaloer.filepicker.FilePickerActivity;
 import org.fedorahosted.tennera.jgettext.Catalog;
 import org.fedorahosted.tennera.jgettext.Message;
 import org.fedorahosted.tennera.jgettext.catalog.parse.ExtendedCatalogParser;
 import org.fedorahosted.tennera.jgettext.catalog.parse.ParseException;
+import org.fedorahosted.tennera.jgettext.PoWriter;
 import antlr.RecognitionException;
 import antlr.TokenStreamException;
 
@@ -31,10 +34,12 @@ import ru.securelayer.rad.ando.R;
 public class AndoMain extends Activity implements OnClickListener
 {
     private static final int REQUEST_PICK_FILE = 1;
+    private String fileName;
     private TextView textFileName;
     private TextView textOriginal;
     private EditText editTranslated;
     private Button openButton;
+    private Button saveButton;
     private Button prevButton;
     private Button nextButton;
     private Button copyButton;
@@ -55,13 +60,13 @@ public class AndoMain extends Activity implements OnClickListener
         textOriginal = (TextView) findViewById(R.id.textOriginal);
         editTranslated = (EditText) findViewById(R.id.editTranslated);
         openButton = (Button) findViewById(R.id.openButton);
+        saveButton = (Button) findViewById(R.id.saveButton);
         prevButton = (Button) findViewById(R.id.prevButton);
         nextButton = (Button) findViewById(R.id.nextButton);
         copyButton = (Button) findViewById(R.id.copyButton);
 
-        textFileName.setText("... Choose a file ...");
-
         openButton.setOnClickListener(this);
+        saveButton.setOnClickListener(this);
         prevButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
         copyButton.setOnClickListener(this);
@@ -85,6 +90,9 @@ public class AndoMain extends Activity implements OnClickListener
             // start the activity
             startActivityForResult(intent, REQUEST_PICK_FILE);
             break;
+        case R.id.saveButton:
+            saveCatalog();
+            break;
         case R.id.prevButton:
             prevMessage();
             break;
@@ -106,13 +114,15 @@ public class AndoMain extends Activity implements OnClickListener
                     // Get the file path
                     try {
                         try {
-                            File poFile = new File(data.getStringExtra(FilePickerActivity.EXTRA_FILE_PATH));
+                            fileName = data.getStringExtra(FilePickerActivity.EXTRA_FILE_PATH);
+                            File poFile = new File(fileName);
                             // Parse a file
                             ExtendedCatalogParser parser = new ExtendedCatalogParser(poFile);
                             try {
                                 parser.catalog();
-                            } catch (RecognitionException ex) {}
-                              catch (TokenStreamException ex) {}
+                            } catch (RecognitionException ex) {
+                            } catch (TokenStreamException ex) {
+                            }
                             catalog = parser.getCatalog();
                             // Iterate of file's items.
                             for (Message m : catalog){
@@ -125,12 +135,29 @@ public class AndoMain extends Activity implements OnClickListener
                             textFileName.setText(poFile.getPath());
                             // Show first token
                             nextMessage();
+                            // Show notification
+                            CharSequence message = getString(R.string.resource_loaded);
+                            showNotification(message);
+
                         } catch(FileNotFoundException ex) {}
                     } catch(IOException ex) {}
                     //R.id.totalValue.setText(entryCount);
                     //R.id.transValue.setText(obsoleteCount);
                 }
             }
+        }
+    }
+
+    protected void saveCatalog() {
+        PoWriter writer = new PoWriter();
+        try {
+            File poFile = new File(fileName);
+            writer.write(catalog, poFile);
+            CharSequence message = getString(R.string.resource_saved);
+            showNotification(message);
+        } catch(IOException ex) {
+            CharSequence message = getString(R.string.resource_saved_not);
+            showNotification(message);
         }
     }
 
@@ -153,5 +180,12 @@ public class AndoMain extends Activity implements OnClickListener
 
     protected void msgstrCopy() {
         editTranslated.setText(textOriginal.getText());
+    }
+
+    protected void showNotification(CharSequence message) {
+        Context ctx = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(ctx, message, duration);
+        toast.show();
     }
 }

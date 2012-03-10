@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Ando</string>
+    <string name="resource_loaded">Resource loaded</string>
+    <string name="resource_saved">Resource saved</string>
+    <string name="resource_saved_not">Resource not saved</string>
 </resources>
