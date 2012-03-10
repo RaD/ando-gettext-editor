@@ -35,7 +35,8 @@ import ru.securelayer.rad.ando.R;
 public class AndoMain extends Activity implements OnClickListener
 {
     private static final int REQUEST_PICK_FILE = 1;
-    private String fileName;
+
+    private String resourceFileName;
     private TextView textFileName;
     private TextView textOriginal;
     private EditText editTranslated;
@@ -109,7 +110,7 @@ public class AndoMain extends Activity implements OnClickListener
             startActivityForResult(intent, REQUEST_PICK_FILE);
             break;
         case R.id.saveButton:
-            saveCatalog();
+            saveCatalog(resourceFileName);
             break;
         case R.id.prevButton:
             prevMessage();
@@ -129,44 +130,44 @@ public class AndoMain extends Activity implements OnClickListener
             switch(requestCode) {
             case REQUEST_PICK_FILE:
                 if (data.hasExtra(FilePickerActivity.EXTRA_FILE_PATH)) {
-                    // Get the file path
-                    try {
-                        try {
-                            fileName = data.getStringExtra(FilePickerActivity.EXTRA_FILE_PATH);
-                            File poFile = new File(fileName);
-                            // Parse a file
-                            ExtendedCatalogParser parser = new ExtendedCatalogParser(poFile);
-                            try {
-                                parser.catalog();
-                            } catch (RecognitionException ex) {
-                            } catch (TokenStreamException ex) {
-                            }
-                            catalog = parser.getCatalog();
-                            // Iterate of file's items.
-                            for (Message m : catalog){
-                                if (! m.isHeader()) {
-                                    messages.add(m);
-                                }
-                            }
-                            iterator = messages.listIterator();
-                            // Set the file path text view
-                            textFileName.setText(poFile.getPath());
-                            // Show first token
-                            nextMessage();
-                            // Show notification
-                            CharSequence message = getString(R.string.resource_loaded);
-                            showNotification(message);
-
-                        } catch(FileNotFoundException ex) {}
-                    } catch(IOException ex) {}
-                    //R.id.totalValue.setText(entryCount);
-                    //R.id.transValue.setText(obsoleteCount);
+                    resourceFileName = data.getStringExtra(FilePickerActivity.EXTRA_FILE_PATH);
+                    loadCatalog(resourceFileName);
                 }
             }
         }
     }
 
-    protected void saveCatalog() {
+    protected void loadCatalog(String fileName) {
+        try {
+            try {
+                File poFile = new File(fileName);
+                // Parse a file
+                ExtendedCatalogParser parser = new ExtendedCatalogParser(poFile);
+                try {
+                    parser.catalog();
+                } catch (RecognitionException ex) {
+                } catch (TokenStreamException ex) {
+                }
+                catalog = parser.getCatalog();
+                // Iterate of file's items.
+                for (Message m : catalog){
+                    if (! m.isHeader()) {
+                        messages.add(m);
+                    }
+                }
+                iterator = messages.listIterator();
+                // Set the file path text view
+                textFileName.setText(fileName);
+                // Show first token
+                nextMessage();
+                // Show notification
+                CharSequence message = getString(R.string.resource_loaded);
+                showNotification(message);
+            } catch(FileNotFoundException ex) {}
+        } catch(IOException ex) {}
+    }
+
+    protected void saveCatalog(String fileName) {
         PoWriter writer = new PoWriter();
         try {
             File poFile = new File(fileName);
@@ -179,7 +180,7 @@ public class AndoMain extends Activity implements OnClickListener
         }
     }
 
-    protected void saveIfChanged() {
+    protected void applyIfChanged() {
         if (message != null) {
             String textOrig = message.getMsgstr();
             String textEdit = editTranslated.getText().toString();
@@ -190,24 +191,24 @@ public class AndoMain extends Activity implements OnClickListener
     }
 
     protected void prevMessage() {
+        applyIfChanged();
+        if (directionForward == true && iterator.hasPrevious()) {
+            directionForward = false;
+            iterator.previous();
+        }
         if (iterator.hasPrevious()) {
-            saveIfChanged();
-            if (directionForward == true) {
-                directionForward = false;
-                iterator.previous();
-            }
             message = iterator.previous();
             fillMsgWidgets(message);
         }
     }
 
     protected void nextMessage() {
+        applyIfChanged();
+        if (directionForward == false && iterator.hasNext()) {
+            directionForward = true;
+            iterator.next();
+        }
         if (iterator.hasNext()) {
-            saveIfChanged();
-            if (directionForward == false) {
-                directionForward = true;
-                iterator.next();
-            }
             message = iterator.next();
             fillMsgWidgets(message);
         }
