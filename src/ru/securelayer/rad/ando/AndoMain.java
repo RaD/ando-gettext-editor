@@ -44,6 +44,7 @@ public class AndoMain extends Activity implements OnClickListener
     private Button nextButton;
     private Button copyButton;
     private Catalog catalog;
+    private Message message;
     private ArrayList<Message> messages;
     private ListIterator<Message> iterator;
     private int entryCount = 0;
@@ -161,15 +162,29 @@ public class AndoMain extends Activity implements OnClickListener
         }
     }
 
+    protected void saveIfChanged() {
+        if (message != null) {
+            String textOrig = message.getMsgstr();
+            String textEdit = editTranslated.getText().toString();
+            if (! textOrig.equals(textEdit)) {
+                message.setMsgstr(textEdit);
+            }
+        }
+    }
+
     protected void prevMessage() {
         if (iterator.hasPrevious()) {
-            fillMsgWidgets(iterator.previous());
+            saveIfChanged();
+            message = iterator.previous();
+            fillMsgWidgets(message);
         }
     }
 
     protected void nextMessage() {
         if (iterator.hasNext()) {
-            fillMsgWidgets(iterator.next());
+            saveIfChanged();
+            message = iterator.next();
+            fillMsgWidgets(message);
         }
     }
 
