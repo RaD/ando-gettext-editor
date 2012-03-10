@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
 
+import android.content.res.Configuration;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
@@ -74,6 +75,21 @@ public class AndoMain extends Activity implements OnClickListener
         copyButton.setOnClickListener(this);
 
         messages = new ArrayList<Message>();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // landscape orientation
+        } else {
+            // portrait orientation
+        }
+        if (newConfig.keyboardHidden == Configuration.KEYBOARDHIDDEN_NO) {
+            // keyboard is active
+        } else {
+            // keyboard is hidden
+        }
     }
 
     @Override
