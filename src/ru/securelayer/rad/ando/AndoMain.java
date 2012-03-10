@@ -101,7 +101,7 @@ public class AndoMain extends Activity implements OnClickListener
             // create an intent for the file picker activity
             Intent intent = new Intent(this, FilePickerActivity.class);
             // set the initial directory to be the sdcard
-            // intent.putExtra(FilePickerActivity.EXTRA_FILE_PATH, Environment.getExternalStorageDirectory());
+            intent.putExtra(FilePickerActivity.EXTRA_FILE_PATH, Environment.getExternalStorageDirectory().getAbsolutePath());
             // only make .po files visible
             ArrayList<String> extensions = new ArrayList<String>();
             extensions.add(".po");
