@@ -47,6 +47,7 @@ public class AndoMain extends Activity implements OnClickListener
     private Message message;
     private ArrayList<Message> messages;
     private ListIterator<Message> iterator;
+    private Boolean directionForward = true;
     private int entryCount = 0;
     private int obsoleteCount = 0;
 
@@ -175,6 +176,10 @@ public class AndoMain extends Activity implements OnClickListener
     protected void prevMessage() {
         if (iterator.hasPrevious()) {
             saveIfChanged();
+            if (directionForward == true) {
+                directionForward = false;
+                iterator.previous();
+            }
             message = iterator.previous();
             fillMsgWidgets(message);
         }
@@ -183,6 +188,10 @@ public class AndoMain extends Activity implements OnClickListener
     protected void nextMessage() {
         if (iterator.hasNext()) {
             saveIfChanged();
+            if (directionForward == false) {
+                directionForward = true;
+                iterator.next();
+            }
             message = iterator.next();
             fillMsgWidgets(message);
         }
