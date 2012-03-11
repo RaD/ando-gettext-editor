@@ -11,8 +11,10 @@ import android.content.res.Configuration;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.content.Intent;
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Menu;
@@ -23,6 +25,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 
 import com.kaloer.filepicker.FilePickerActivity;
 import org.fedorahosted.tennera.jgettext.Catalog;
@@ -35,7 +40,7 @@ import antlr.TokenStreamException;
 
 import ru.securelayer.rad.ando.R;
 
-public class AndoMain extends Activity implements OnClickListener
+public class AndoMain extends Activity
 {
     private static final int REQUEST_PICK_FILE = 1;
 
@@ -55,27 +60,25 @@ public class AndoMain extends Activity implements OnClickListener
     private Boolean directionForward = true;
     private int entryCount = 0;
     private int obsoleteCount = 0;
+    private Context ctx;
+    private MessageAdapter pagerAdapter;
+    private ViewPager messagePager;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.main);
+        ctx = this;
+
+        pagerAdapter = new MessageAdapter();
+        messagePager = (ViewPager) findViewById(R.id.view_pager);
+        messagePager.setAdapter(pagerAdapter);
 
         textFileName = (TextView) findViewById(R.id.textFileName);
         textOriginal = (TextView) findViewById(R.id.textOriginal);
         editTranslated = (EditText) findViewById(R.id.editTranslated);
-        openButton = (Button) findViewById(R.id.openButton);
-        saveButton = (Button) findViewById(R.id.saveButton);
-        prevButton = (Button) findViewById(R.id.prevButton);
-        nextButton = (Button) findViewById(R.id.nextButton);
-        copyButton = (Button) findViewById(R.id.copyButton);
-
-        openButton.setOnClickListener(this);
-        saveButton.setOnClickListener(this);
-        prevButton.setOnClickListener(this);
-        nextButton.setOnClickListener(this);
-        copyButton.setOnClickListener(this);
 
         messages = new ArrayList<Message>();
     }
@@ -121,26 +124,6 @@ public class AndoMain extends Activity implements OnClickListener
         return false;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()) {
-        case R.id.openButton:
-            chooseAndOpen();
-            break;
-        case R.id.saveButton:
-            saveCatalog(resourceFileName);
-            break;
-        case R.id.prevButton:
-            prevMessage();
-            break;
-        case R.id.nextButton:
-            nextMessage();
-            break;
-        case R.id.copyButton:
-            msgstrCopy();
-            break;
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -191,7 +174,7 @@ public class AndoMain extends Activity implements OnClickListener
                 // Set the file path text view
                 textFileName.setText(fileName);
                 // Show first token
-                nextMessage();
+                // nextMessage();
                 // Show notification
                 CharSequence message = getString(R.string.resource_loaded);
                 showNotification(message);
@@ -261,5 +244,84 @@ public class AndoMain extends Activity implements OnClickListener
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(ctx, message, duration);
         toast.show();
+    }
+
+
+
+
+
+    private class MessageAdapter extends PagerAdapter{
+
+        LayoutInflater inflater = null;
+
+        @Override
+        public int getCount() {
+            return messages.size();
+        }
+
+        /**
+         * Create the page for the given position.  The adapter is responsible
+         * for adding the view to the container given here, although it only
+         * must ensure this is done by the time it returns from
+         * {@link #finishUpdate()}.
+         *
+         * @param container The containing View in which the page will be shown.
+         * @param position The page position to be instantiated.
+         * @return Returns an Object representing the new page.  This does not
+         * need to be a View, but can be some other container of the page.
+         */
+        @Override
+        public Object instantiateItem(View collection, int position) {
+            inflater = LayoutInflater.from(ctx);
+            View page = inflater.inflate(R.layout.slider, null);
+            ((ViewPager) collection).addView(page, 0);
+            TextView original = (TextView) page.findViewById(R.id.textOriginal);
+            EditText translated = (EditText) page.findViewById(R.id.editTranslated);
+            Message message = messages.get(position);
+            original.setText(message.getMsgid());
+            translated.setText(message.getMsgstr());
+            return page;
+        }
+
+        /**
+         * Remove a page for the given position.  The adapter is responsible
+         * for removing the view from its container, although it only must ensure
+         * this is done by the time it returns from {@link #finishUpdate()}.
+         *
+         * @param container The containing View from which the page will be removed.
+         * @param position The page position to be removed.
+         * @param object The same object that was returned by
+         * {@link #instantiateItem(View, int)}.
+         */
+        @Override
+        public void destroyItem(View collection, int position, Object view) {
+            ((ViewPager) collection).removeView((View) view);
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == ((View)object);
+        }
+
+        /**
+         * Called when the a change in the shown pages has been completed.  At this
+         * point you must ensure that all of the pages have actually been added or
+         * removed from the container as appropriate.
+         * @param container The containing View which is displaying this adapter's
+         * page views.
+         */
+        @Override
+        public void finishUpdate(View arg0) {}
+
+        @Override
+        public void restoreState(Parcelable arg0, ClassLoader arg1) {}
+
+        @Override
+        public Parcelable saveState() {
+            return null;
+        }
+
+        @Override
+        public void startUpdate(View arg0) {}
     }
 }

@@ -2,14 +2,14 @@
     android:name="Context Menu">
     <item
         android:id="@+id/menu_open"
-        android:title="Open">
+        android:title="@string/menu_open">
     </item>
     <item
         android:id="@+id/menu_save"
-        android:title="Save">
+        android:title="@string/menu_save">
     </item>
     <item
         android:id="@+id/menu_copy"
-        android:title="Copy">
+        android:title="@string/menu_copy">
     </item>
 </menu>
