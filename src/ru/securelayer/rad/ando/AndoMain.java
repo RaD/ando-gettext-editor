@@ -150,6 +150,7 @@ public class AndoMain extends Activity implements OnClickListener
                 }
                 catalog = parser.getCatalog();
                 // Iterate of file's items.
+                messages.clear();
                 for (Message m : catalog){
                     if (! m.isHeader()) {
                         messages.add(m);
