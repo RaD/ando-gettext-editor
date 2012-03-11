@@ -200,6 +200,7 @@ public class AndoMain extends Activity implements OnClickListener
     }
 
     protected void saveCatalog(String fileName) {
+        applyIfChanged();
         PoWriter writer = new PoWriter();
         try {
             File poFile = new File(fileName);
