@@ -4,4 +4,8 @@
     <string name="resource_loaded">Resource loaded</string>
     <string name="resource_saved">Resource saved</string>
     <string name="resource_saved_not">Resource not saved</string>
+
+    <string name="menu_open">Open</string>
+    <string name="menu_save">Save</string>
+    <string name="menu_copy">Copy</string>
 </resources>

@@ -15,6 +15,9 @@ import android.content.Intent;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import android.widget.Button;
 import android.widget.TextView;
@@ -55,8 +58,7 @@ public class AndoMain extends Activity implements OnClickListener
 
     /** Called when the activity is first created. */
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
@@ -94,20 +96,36 @@ public class AndoMain extends Activity implements OnClickListener
     }
 
     @Override
-    public void onClick(View v)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_open:
+                chooseAndOpen();
+                return true;
+            case R.id.menu_save:
+                saveCatalog(resourceFileName);
+                return true;
+            case R.id.menu_copy:
+                msgstrCopy();
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onClick(View v) {
         switch(v.getId()) {
         case R.id.openButton:
-            // create an intent for the file picker activity
-            Intent intent = new Intent(this, FilePickerActivity.class);
-            // set the initial directory to be the sdcard
-            intent.putExtra(FilePickerActivity.EXTRA_FILE_PATH, Environment.getExternalStorageDirectory().getAbsolutePath());
-            // only make .po files visible
-            ArrayList<String> extensions = new ArrayList<String>();
-            extensions.add(".po");
-            intent.putExtra(FilePickerActivity.EXTRA_ACCEPTED_FILE_EXTENSIONS, extensions);
-            // start the activity
-            startActivityForResult(intent, REQUEST_PICK_FILE);
+            chooseAndOpen();
             break;
         case R.id.saveButton:
             saveCatalog(resourceFileName);
@@ -135,6 +153,19 @@ public class AndoMain extends Activity implements OnClickListener
                 }
             }
         }
+    }
+
+    protected void chooseAndOpen() {
+        // create an intent for the file picker activity
+        Intent intent = new Intent(this, FilePickerActivity.class);
+        // set the initial directory to be the sdcard
+        intent.putExtra(FilePickerActivity.EXTRA_FILE_PATH, Environment.getExternalStorageDirectory().getAbsolutePath());
+        // only make .po files visible
+        ArrayList<String> extensions = new ArrayList<String>();
+        extensions.add(".po");
+        intent.putExtra(FilePickerActivity.EXTRA_ACCEPTED_FILE_EXTENSIONS, extensions);
+        // start the activity
+        startActivityForResult(intent, REQUEST_PICK_FILE);
     }
 
     protected void loadCatalog(String fileName) {

@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:name="Context Menu">
+    <item
+        android:id="@+id/menu_open"
+        android:title="Open">
+    </item>
+    <item
+        android:id="@+id/menu_save"
+        android:title="Save">
+    </item>
+    <item
+        android:id="@+id/menu_copy"
+        android:title="Copy">
+    </item>
+</menu>
