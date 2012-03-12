@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.ListIterator;
 
 import android.content.res.Configuration;
 import android.app.Activity;
@@ -21,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -48,18 +45,9 @@ public class AndoMain extends Activity
     private TextView textFileName;
     private TextView textOriginal;
     private EditText editTranslated;
-    private Button openButton;
-    private Button saveButton;
-    private Button prevButton;
-    private Button nextButton;
-    private Button copyButton;
     private Catalog catalog;
     private Message message;
     private ArrayList<Message> messages;
-    private ListIterator<Message> iterator;
-    private Boolean directionForward = true;
-    private int entryCount = 0;
-    private int obsoleteCount = 0;
     private Context ctx;
     private MessageAdapter pagerAdapter;
     private ViewPager messagePager;
@@ -124,7 +112,6 @@ public class AndoMain extends Activity
         return false;
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
@@ -170,14 +157,13 @@ public class AndoMain extends Activity
                         messages.add(m);
                     }
                 }
-                iterator = messages.listIterator();
                 // Set the file path text view
                 textFileName.setText(fileName);
-                // Show first token
-                // nextMessage();
+                // Show first page
+                messagePager.setCurrentItem(0, true);
                 // Show notification
-                CharSequence message = getString(R.string.resource_loaded);
-                showNotification(message);
+                CharSequence msg = getString(R.string.resource_loaded);
+                showNotification(msg);
             } catch(FileNotFoundException ex) {}
         } catch(IOException ex) {}
     }
@@ -185,15 +171,15 @@ public class AndoMain extends Activity
     protected void saveCatalog(String fileName) {
         applyIfChanged();
         PoWriter writer = new PoWriter();
+        CharSequence msg;
         try {
             File poFile = new File(fileName);
             writer.write(catalog, poFile);
-            CharSequence message = getString(R.string.resource_saved);
-            showNotification(message);
+            msg = getString(R.string.resource_saved);
         } catch(IOException ex) {
-            CharSequence message = getString(R.string.resource_saved_not);
-            showNotification(message);
+            msg = getString(R.string.resource_saved_not);
         }
+        showNotification(msg);
     }
 
     protected void applyIfChanged() {
@@ -206,43 +192,14 @@ public class AndoMain extends Activity
         }
     }
 
-    protected void prevMessage() {
-        applyIfChanged();
-        if (directionForward == true && iterator.hasPrevious()) {
-            directionForward = false;
-            iterator.previous();
-        }
-        if (iterator.hasPrevious()) {
-            message = iterator.previous();
-            fillMsgWidgets(message);
-        }
-    }
-
-    protected void nextMessage() {
-        applyIfChanged();
-        if (directionForward == false && iterator.hasNext()) {
-            directionForward = true;
-            iterator.next();
-        }
-        if (iterator.hasNext()) {
-            message = iterator.next();
-            fillMsgWidgets(message);
-        }
-    }
-
-    protected void fillMsgWidgets(Message message) {
-        textOriginal.setText(message.getMsgid());
-        editTranslated.setText(message.getMsgstr());
-    }
-
     protected void msgstrCopy() {
         editTranslated.setText(textOriginal.getText());
     }
 
-    protected void showNotification(CharSequence message) {
+    protected void showNotification(CharSequence msg) {
         Context ctx = getApplicationContext();
         int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(ctx, message, duration);
+        Toast toast = Toast.makeText(ctx, msg, duration);
         toast.show();
     }
 
