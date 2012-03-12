@@ -14,7 +14,7 @@ import android.content.Intent;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,10 +43,7 @@ public class AndoMain extends Activity
 
     private String resourceFileName;
     private TextView textFileName;
-    private TextView textOriginal;
-    private EditText editTranslated;
     private Catalog catalog;
-    private Message message;
     private ArrayList<Message> messages;
     private Context ctx;
     private MessageAdapter pagerAdapter;
@@ -65,8 +62,6 @@ public class AndoMain extends Activity
         messagePager.setAdapter(pagerAdapter);
 
         textFileName = (TextView) findViewById(R.id.textFileName);
-        textOriginal = (TextView) findViewById(R.id.textOriginal);
-        editTranslated = (EditText) findViewById(R.id.editTranslated);
 
         messages = new ArrayList<Message>();
     }
@@ -106,7 +101,7 @@ public class AndoMain extends Activity
                 saveCatalog(resourceFileName);
                 return true;
             case R.id.menu_copy:
-                msgstrCopy();
+                pagerAdapter.msgstrCopy();
                 return true;
         }
         return false;
@@ -169,7 +164,7 @@ public class AndoMain extends Activity
     }
 
     protected void saveCatalog(String fileName) {
-        applyIfChanged();
+        //pagerAdapter.applyIfChanged();
         PoWriter writer = new PoWriter();
         CharSequence msg;
         try {
@@ -180,20 +175,6 @@ public class AndoMain extends Activity
             msg = getString(R.string.resource_saved_not);
         }
         showNotification(msg);
-    }
-
-    protected void applyIfChanged() {
-        if (message != null) {
-            String textOrig = message.getMsgstr();
-            String textEdit = editTranslated.getText().toString();
-            if (! textOrig.equals(textEdit)) {
-                message.setMsgstr(textEdit);
-            }
-        }
-    }
-
-    protected void msgstrCopy() {
-        editTranslated.setText(textOriginal.getText());
     }
 
     protected void showNotification(CharSequence msg) {
@@ -209,7 +190,9 @@ public class AndoMain extends Activity
 
     private class MessageAdapter extends PagerAdapter{
 
-        LayoutInflater inflater = null;
+        private LayoutInflater inflater = null;
+        private TextView original;
+        private EditText translated;
 
         @Override
         public int getCount() {
@@ -228,15 +211,15 @@ public class AndoMain extends Activity
          * need to be a View, but can be some other container of the page.
          */
         @Override
-        public Object instantiateItem(View collection, int position) {
+        public Object instantiateItem(ViewGroup collection, int position) {
             inflater = LayoutInflater.from(ctx);
             View page = inflater.inflate(R.layout.slider, null);
             ((ViewPager) collection).addView(page, 0);
-            TextView original = (TextView) page.findViewById(R.id.textOriginal);
-            EditText translated = (EditText) page.findViewById(R.id.editTranslated);
-            Message message = messages.get(position);
-            original.setText(message.getMsgid());
-            translated.setText(message.getMsgstr());
+            Message msg = messages.get(position);
+            this.original = (TextView) page.findViewById(R.id.textOriginal);
+            this.translated = (EditText) page.findViewById(R.id.editTranslated);
+            this.original.setText(msg.getMsgid());
+            this.translated.setText(msg.getMsgstr());
             return page;
         }
 
@@ -251,8 +234,16 @@ public class AndoMain extends Activity
          * {@link #instantiateItem(View, int)}.
          */
         @Override
-        public void destroyItem(View collection, int position, Object view) {
-            ((ViewPager) collection).removeView((View) view);
+        public void destroyItem(ViewGroup collection, int position, Object page) {
+            Message msg = messages.get(position);
+            TextView wOrig = (TextView) ((View) page).findViewById(R.id.textOriginal);
+            EditText wEdit = (EditText) ((View) page).findViewById(R.id.editTranslated);
+            String tOrig = msg.getMsgstr();
+            String tEdit = wEdit.getText().toString();
+            if (! tOrig.equals(tEdit)) {
+                msg.setMsgstr(tEdit);
+            }
+            ((ViewPager) collection).removeView((View) page);
         }
 
         @Override
@@ -267,18 +258,35 @@ public class AndoMain extends Activity
          * @param container The containing View which is displaying this adapter's
          * page views.
          */
-        @Override
-        public void finishUpdate(View arg0) {}
 
         @Override
-        public void restoreState(Parcelable arg0, ClassLoader arg1) {}
+        public void restoreState(Parcelable state, ClassLoader loader) {}
 
         @Override
         public Parcelable saveState() {
             return null;
         }
 
-        @Override
-        public void startUpdate(View arg0) {}
+        public void msgstrCopy() {
+            TextView wOrig = (TextView) findViewById(R.id.textOriginal);
+            EditText wEdit = (EditText) findViewById(R.id.editTranslated);
+            wEdit.setText(wOrig.getText());
+            notifyDataSetChanged();
+        }
+
+        // public void applyIfChanged() {
+        //     if (this.message != null) {
+        //         String textOrig = this.message.getMsgstr();
+        //         String textEdit = this.translated.getText().toString();
+        //         if (! textOrig.equals(textEdit)) {
+        //             this.message.setMsgstr(textEdit);
+        //         }
+        //         showNotification("applied");
+        //     } else {
+        //         showNotification("no message");
+        //     }
+        // }
+
+
     }
 }
