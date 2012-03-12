@@ -101,7 +101,7 @@ public class AndoMain extends Activity
                 saveCatalog(resourceFileName);
                 return true;
             case R.id.menu_copy:
-                pagerAdapter.msgstrCopy();
+                msgstrCopy();
                 return true;
         }
         return false;
@@ -177,6 +177,14 @@ public class AndoMain extends Activity
         showNotification(msg);
     }
 
+    protected void msgstrCopy() {
+        View page = this.messagePager.getFocusedChild();
+        TextView wOrig = (TextView) page.findViewById(R.id.textOriginal);
+        EditText wEdit = (EditText) page.findViewById(R.id.editTranslated);
+        wEdit.setText(wOrig.getText());
+        pagerAdapter.notifyDataSetChanged();
+    }
+
     protected void showNotification(CharSequence msg) {
         Context ctx = getApplicationContext();
         int duration = Toast.LENGTH_SHORT;
@@ -184,8 +192,9 @@ public class AndoMain extends Activity
         toast.show();
     }
 
-
-
+//
+// ***************
+//
 
 
     private class MessageAdapter extends PagerAdapter{
@@ -267,12 +276,6 @@ public class AndoMain extends Activity
             return null;
         }
 
-        public void msgstrCopy() {
-            TextView wOrig = (TextView) findViewById(R.id.textOriginal);
-            EditText wEdit = (EditText) findViewById(R.id.editTranslated);
-            wEdit.setText(wOrig.getText());
-            notifyDataSetChanged();
-        }
 
         // public void applyIfChanged() {
         //     if (this.message != null) {
