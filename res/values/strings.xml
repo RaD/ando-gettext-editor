@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Ando</string>
     <string name="resource_title">Resource</string>
-    <string name="resource_choose">... Choose a file ...</string>
+    <string name="resource_choose">... Choose a file using menu\'s Open button ...</string>
     <string name="resource_loaded">Resource loaded</string>
     <string name="resource_saved">Resource saved</string>
     <string name="resource_saved_not">Resource not saved</string>

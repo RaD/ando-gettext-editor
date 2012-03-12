@@ -9,12 +9,9 @@ import android.content.res.Configuration;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.content.Intent;
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,7 +20,6 @@ import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.kaloer.filepicker.FilePickerActivity;
@@ -36,6 +32,7 @@ import antlr.RecognitionException;
 import antlr.TokenStreamException;
 
 import ru.securelayer.rad.ando.R;
+import ru.securelayer.rad.ando.MessageAdapter;
 
 public class AndoMain extends Activity
 {
@@ -55,15 +52,16 @@ public class AndoMain extends Activity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
+
+        messages = new ArrayList<Message>();
+
         ctx = this;
 
-        pagerAdapter = new MessageAdapter();
+        pagerAdapter = new MessageAdapter(ctx, messages);
         messagePager = (ViewPager) findViewById(R.id.view_pager);
         messagePager.setAdapter(pagerAdapter);
 
         textFileName = (TextView) findViewById(R.id.textFileName);
-
-        messages = new ArrayList<Message>();
     }
 
     @Override
@@ -190,106 +188,5 @@ public class AndoMain extends Activity
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(ctx, msg, duration);
         toast.show();
-    }
-
-//
-// ***************
-//
-
-
-    private class MessageAdapter extends PagerAdapter{
-
-        private LayoutInflater inflater = null;
-        private TextView original;
-        private EditText translated;
-
-        @Override
-        public int getCount() {
-            return messages.size();
-        }
-
-        /**
-         * Create the page for the given position.  The adapter is responsible
-         * for adding the view to the container given here, although it only
-         * must ensure this is done by the time it returns from
-         * {@link #finishUpdate()}.
-         *
-         * @param container The containing View in which the page will be shown.
-         * @param position The page position to be instantiated.
-         * @return Returns an Object representing the new page.  This does not
-         * need to be a View, but can be some other container of the page.
-         */
-        @Override
-        public Object instantiateItem(ViewGroup collection, int position) {
-            inflater = LayoutInflater.from(ctx);
-            View page = inflater.inflate(R.layout.slider, null);
-            ((ViewPager) collection).addView(page, 0);
-            Message msg = messages.get(position);
-            this.original = (TextView) page.findViewById(R.id.textOriginal);
-            this.translated = (EditText) page.findViewById(R.id.editTranslated);
-            this.original.setText(msg.getMsgid());
-            this.translated.setText(msg.getMsgstr());
-            return page;
-        }
-
-        /**
-         * Remove a page for the given position.  The adapter is responsible
-         * for removing the view from its container, although it only must ensure
-         * this is done by the time it returns from {@link #finishUpdate()}.
-         *
-         * @param container The containing View from which the page will be removed.
-         * @param position The page position to be removed.
-         * @param object The same object that was returned by
-         * {@link #instantiateItem(View, int)}.
-         */
-        @Override
-        public void destroyItem(ViewGroup collection, int position, Object page) {
-            Message msg = messages.get(position);
-            TextView wOrig = (TextView) ((View) page).findViewById(R.id.textOriginal);
-            EditText wEdit = (EditText) ((View) page).findViewById(R.id.editTranslated);
-            String tOrig = msg.getMsgstr();
-            String tEdit = wEdit.getText().toString();
-            if (! tOrig.equals(tEdit)) {
-                msg.setMsgstr(tEdit);
-            }
-            ((ViewPager) collection).removeView((View) page);
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == ((View)object);
-        }
-
-        /**
-         * Called when the a change in the shown pages has been completed.  At this
-         * point you must ensure that all of the pages have actually been added or
-         * removed from the container as appropriate.
-         * @param container The containing View which is displaying this adapter's
-         * page views.
-         */
-
-        @Override
-        public void restoreState(Parcelable state, ClassLoader loader) {}
-
-        @Override
-        public Parcelable saveState() {
-            return null;
-        }
-
-
-        // public void applyIfChanged() {
-        //     if (this.message != null) {
-        //         String textOrig = this.message.getMsgstr();
-        //         String textEdit = this.translated.getText().toString();
-        //         if (! textOrig.equals(textEdit)) {
-        //             this.message.setMsgstr(textEdit);
-        //         }
-        //         showNotification("applied");
-        //     } else {
-        //         showNotification("no message");
-        //     }
-        // }
-
-
     }
 }
