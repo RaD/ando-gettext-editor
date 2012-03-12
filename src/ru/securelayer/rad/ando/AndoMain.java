@@ -131,6 +131,11 @@ public class AndoMain extends Activity
         startActivityForResult(intent, REQUEST_PICK_FILE);
     }
 
+    /**
+     * Loads the messages catalog.
+     *
+     * @param fileName The full path to resource file on filesystem.
+     */
     protected void loadCatalog(String fileName) {
         try {
             try {
@@ -161,8 +166,16 @@ public class AndoMain extends Activity
         } catch(IOException ex) {}
     }
 
+    /**
+     * Saves the messages catalog.
+     *
+     * @param fileName The full path to resource file on filesystem.
+     */
     protected void saveCatalog(String fileName) {
-        //pagerAdapter.applyIfChanged();
+        View page = this.messagePager.getFocusedChild();
+        int position = this.messagePager.getCurrentItem();
+        this.pagerAdapter.applyIfChanged(page, position);
+
         PoWriter writer = new PoWriter();
         CharSequence msg;
         try {
@@ -175,6 +188,9 @@ public class AndoMain extends Activity
         showNotification(msg);
     }
 
+    /**
+     * Copies the content from original widget into translated one.
+     */
     protected void msgstrCopy() {
         View page = this.messagePager.getFocusedChild();
         TextView wOrig = (TextView) page.findViewById(R.id.textOriginal);
@@ -183,6 +199,11 @@ public class AndoMain extends Activity
         pagerAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Shows the visible notification on device's screen.
+     *
+     * @param msg The message to be shown.
+     */
     protected void showNotification(CharSequence msg) {
         Context ctx = getApplicationContext();
         int duration = Toast.LENGTH_SHORT;

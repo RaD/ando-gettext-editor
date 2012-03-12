@@ -70,15 +70,26 @@ public class MessageAdapter extends PagerAdapter{
      */
     @Override
     public void destroyItem(ViewGroup collection, int position, Object page) {
+        this.applyIfChanged((View) page, position);
+        ((ViewPager) collection).removeView((View) page);
+    }
+
+    /**
+     * Compare the content of translation widget and original message.
+     * If they have a difference, then it updates the messages catalog.
+     *
+     * @param position The position at adapter (i.e. message list)
+     *                 to be changed.
+     */
+    public void applyIfChanged(View page, int position) {
         Message msg = this.messages.get(position);
-        TextView wOrig = (TextView) ((View) page).findViewById(R.id.textOriginal);
-        EditText wEdit = (EditText) ((View) page).findViewById(R.id.editTranslated);
+        TextView wOrig = (TextView) page.findViewById(R.id.textOriginal);
+        EditText wEdit = (EditText) page.findViewById(R.id.editTranslated);
         String tOrig = msg.getMsgstr();
         String tEdit = wEdit.getText().toString();
         if (! tOrig.equals(tEdit)) {
             msg.setMsgstr(tEdit);
         }
-        ((ViewPager) collection).removeView((View) page);
     }
 
     @Override
