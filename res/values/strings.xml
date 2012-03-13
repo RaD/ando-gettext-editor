@@ -3,9 +3,12 @@
     <string name="app_name">Ando</string>
     <string name="resource_title">Resource</string>
     <string name="resource_choose">... Choose a file using menu\'s Open button ...</string>
-    <string name="resource_loaded">Resource loaded</string>
-    <string name="resource_saved">Resource saved</string>
-    <string name="resource_saved_not">Resource not saved</string>
+    <string name="resource_loaded">Resource Loaded</string>
+    <string name="resource_saved">Resource Saved</string>
+    <string name="resource_saved_not">Resource Not Saved</string>
+
+    <string name="activity_resumed">Activity Resumed</string>
+    <string name="activity_saved_not">Activity Not Saved</string>
 
     <string name="menu_open">Open</string>
     <string name="menu_save">Save</string>
