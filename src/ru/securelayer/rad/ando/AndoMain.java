@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -45,7 +46,6 @@ public class AndoMain extends Activity
     private static final int REQUEST_PICK_FILE = 1;
 
     private String resourceFileName = null;
-    private TextView textFileName = null;
     private Catalog catalog = null;
     private ArrayList<Message> messages = null;
     private Context ctx = null;
@@ -68,16 +68,6 @@ public class AndoMain extends Activity
         setContentView(R.layout.main);
 
         getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.icon);
-
-        messages = new ArrayList<Message>();
-
-        ctx = this;
-
-        pagerAdapter = new MessageAdapter(ctx, messages);
-        messagePager = (ViewPager) findViewById(R.id.view_pager);
-        messagePager.setAdapter(pagerAdapter);
-
-        textFileName = (TextView) findViewById(R.id.textFileName);
     }
 
     @Override
@@ -107,7 +97,7 @@ public class AndoMain extends Activity
     @Override
     protected void onPause() {
         super.onPause();
-        if (this.resourceFileName == null) {
+        if (this.resourceFileName == null && this.messagePager != null) {
             if (! writeInstanceState(this)) {
                 showNotification(getString(R.string.activity_saved_not));
             }
@@ -210,6 +200,17 @@ public class AndoMain extends Activity
      * @param fileName The full path to resource file on filesystem.
      */
     protected void loadCatalog(String fileName) {
+        this.messages = new ArrayList<Message>();
+
+        this.pagerAdapter = new MessageAdapter(this, this.messages);
+        this.messagePager = (ViewPager) findViewById(R.id.view_pager);
+        this.messagePager.setAdapter(this.pagerAdapter);
+
+        TextView advice = (TextView) findViewById(R.id.advice);
+        if (advice != null) {
+            ((LinearLayout) advice.getParent()).removeView((View) advice);
+        }
+
         try {
             try {
                 File poFile = new File(fileName);
@@ -220,18 +221,16 @@ public class AndoMain extends Activity
                 } catch (RecognitionException ex) {
                 } catch (TokenStreamException ex) {
                 }
-                catalog = parser.getCatalog();
+                this.catalog = parser.getCatalog();
                 // Iterate of file's items.
-                messages.clear();
-                for (Message m : catalog){
+                this.messages.clear();
+                for (Message m : this.catalog){
                     if (! m.isHeader()) {
-                        messages.add(m);
+                        this.messages.add(m);
                     }
                 }
-                // Set the file path text view
-                textFileName.setText(fileName);
                 // Show first page
-                messagePager.setCurrentItem(0, true);
+                this.messagePager.setCurrentItem(0, true);
                 // Show notification
                 showNotification(getString(R.string.resource_loaded));
                 // Update statistic
