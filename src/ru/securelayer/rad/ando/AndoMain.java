@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
+import android.view.Window;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -51,12 +52,22 @@ public class AndoMain extends Activity
     private MessageAdapter pagerAdapter = null;
     private ViewPager messagePager = null;
 
+    private int msgTotal = 0;
+    private int msgTrans = 0;
+    private int msgFuzzy = 0;
+    private int msgTrash = 0;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle inState) {
         super.onCreate(inState);
 
+        requestWindowFeature(Window.FEATURE_LEFT_ICON);
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+
         setContentView(R.layout.main);
+
+        getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.icon);
 
         messages = new ArrayList<Message>();
 
@@ -223,6 +234,8 @@ public class AndoMain extends Activity
                 messagePager.setCurrentItem(0, true);
                 // Show notification
                 showNotification(getString(R.string.resource_loaded));
+                // Update statistic
+                this.updateTitle();
             } catch(FileNotFoundException ex) {}
         } catch(IOException ex) {}
     }
@@ -258,6 +271,50 @@ public class AndoMain extends Activity
         EditText wEdit = (EditText) page.findViewById(R.id.editTranslated);
         wEdit.setText(wOrig.getText());
         pagerAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Refreshes total/translated/fuzzy/obsolete counters.
+     */
+    protected void refreshCounters() {
+        int total = 0;
+        int trans = 0;
+        int fuzzy = 0;
+        int trash = 0;
+
+        for (Message m : this.messages){
+            total += 1;
+            if (m.isFuzzy()) {
+                fuzzy += 1;
+            }
+            if (m.isObsolete()) {
+                trash += 1;
+            }
+            if (! m.getMsgstr().equals("")) {
+                trans += 1;
+            }
+        }
+        this.msgTotal = total;
+        this.msgTrans = trans;
+        this.msgFuzzy = fuzzy;
+        this.msgTrash = trash;
+    }
+
+    /**
+     * Updates activity's title.
+     */
+    protected void updateTitle() {
+        this.refreshCounters();
+        setProgressBarVisibility(true);
+        setProgress(this.msgTrans * 10000 / this.msgTotal);
+        String fileName = new File(this.resourceFileName).getName();
+        String msg = "[" +
+            this.msgTotal + "/" +
+            this.msgTrans + "/" +
+            this.msgFuzzy + "/" +
+            this.msgTrash + "] " +
+            fileName;
+        setTitle(msg);
     }
 
     /**
