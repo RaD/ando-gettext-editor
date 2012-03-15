@@ -98,6 +98,9 @@ public class AndoMain extends Activity
         }
         this.gestures = (GestureOverlayView) findViewById(R.id.gestures_overlay);
         this.gestures.addOnGesturePerformedListener(this);
+
+        String title = (String) getTitle() + ": " + getString(R.string.resource_choose);
+        setTitle(title);
     }
 
     @Override
@@ -305,14 +308,18 @@ public class AndoMain extends Activity
      * @param fileName The full path to resource file on filesystem.
      */
     protected void saveCatalog(String fileName) {
-        PoWriter writer = new PoWriter();
         CharSequence msg;
-        try {
-            File poFile = new File(fileName);
-            writer.write(catalog, poFile);
-            msg = getString(R.string.resource_saved);
-        } catch(IOException ex) {
-            msg = getString(R.string.resource_saved_not);
+        if (0 == this.messages.size()) {
+            msg = getString(R.string.resource_ready_not);
+        } else {
+            PoWriter writer = new PoWriter();
+            try {
+                File poFile = new File(fileName);
+                writer.write(catalog, poFile);
+                msg = getString(R.string.resource_saved);
+            } catch(IOException ex) {
+                msg = getString(R.string.resource_saved_not);
+            }
         }
         showNotification(msg);
     }
@@ -348,7 +355,9 @@ public class AndoMain extends Activity
      * Copies the content from original widget into translated one.
      */
     protected void msgstrCopy() {
-        widgetMsgStr.setText(widgetMsgId.getText());
+        if (this.token != null) {
+            this.widgetMsgStr.setText(this.widgetMsgId.getText());
+        }
     }
 
     /**

@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Ando</string>
     <string name="resource_choose">... Click \'Menu\' button ...</string>
+    <string name="resource_ready_not">No Resource</string>
     <string name="resource_loaded">Resource Loaded</string>
     <string name="resource_saved">Resource Saved</string>
     <string name="resource_saved_not">Resource Not Saved</string>
