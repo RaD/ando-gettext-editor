@@ -291,12 +291,10 @@ public class AndoMain extends Activity
                     }
                 }
                 iterator = this.messages.listIterator();
-                // Show first page
-                this.nextMessage();
                 // Show notification
                 showNotification(getString(R.string.resource_loaded));
-                // Update statistic
-                this.updateTitle();
+                // Show first page
+                this.nextMessage();
             } catch(FileNotFoundException ex) {}
         } catch(IOException ex) {}
     }
@@ -343,6 +341,7 @@ public class AndoMain extends Activity
         this.token = message;
         this.widgetMsgId.setText(message.getMsgid());
         this.widgetMsgStr.setText(message.getMsgstr());
+        this.updateTitle();
     }
 
     /**
