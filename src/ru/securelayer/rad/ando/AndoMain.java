@@ -14,6 +14,8 @@ import android.os.Environment;
 import android.content.Intent;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.Menu;
@@ -43,7 +45,8 @@ import antlr.TokenStreamException;
 
 import ru.securelayer.rad.ando.R;
 
-public class AndoMain extends Activity implements OnGesturePerformedListener
+public class AndoMain extends Activity 
+    implements OnGesturePerformedListener, TextWatcher
 {
     private static final String PREFERENCE_FILE = "AndoGettextResourceEditor";
     private static final String RESOURCE_FILENAME_KEY = "RESOURCE_FILENAME";
@@ -57,8 +60,11 @@ public class AndoMain extends Activity implements OnGesturePerformedListener
     private String resourceFileName = null;
     private Catalog catalog = null;
     private ArrayList<Message> messages = null;
+    private Message token = null;
     private ListIterator<Message> iterator = null;
+
     private Boolean directionForward = true;
+    private Boolean procTextChanged = false;
 
     private GestureLibrary mLibrary;
     private GestureOverlayView gestures;
@@ -82,6 +88,7 @@ public class AndoMain extends Activity implements OnGesturePerformedListener
 
         widgetMsgId = (TextView) findViewById(R.id.wMsgId);
         widgetMsgStr = (EditText) findViewById(R.id.wMsgStr);
+        widgetMsgStr.addTextChangedListener(this);
 
         this.messages = new ArrayList<Message>();
 
@@ -248,6 +255,16 @@ public class AndoMain extends Activity implements OnGesturePerformedListener
         }
     }
 
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+    public void afterTextChanged(Editable s) {
+        if (! this.procTextChanged) {
+            this.procTextChanged = true;
+            this.token.setMsgstr(s.toString());
+            this.procTextChanged = false;
+        }
+    }
+
     /**
      * Loads the messages catalog.
      *
@@ -323,6 +340,7 @@ public class AndoMain extends Activity implements OnGesturePerformedListener
     }
 
     protected void fillMsgWidgets(Message message) {
+        this.token = message;
         this.widgetMsgId.setText(message.getMsgid());
         this.widgetMsgStr.setText(message.getMsgstr());
     }
