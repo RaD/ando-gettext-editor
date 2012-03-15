@@ -481,6 +481,7 @@ public class AndoMain extends Activity
         setProgress(this.msgTrans * 10000 / this.msgTotal);
         String fileName = new File(this.resourceFileName).getName();
         String msg = "[" +
+            this.index + ":" +
             this.msgTotal + "/" +
             this.msgTrans + "/" +
             this.msgFuzzy + "/" +
