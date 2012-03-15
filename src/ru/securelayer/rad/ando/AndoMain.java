@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 import android.content.res.Configuration;
 import android.app.Activity;
@@ -23,7 +25,12 @@ import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import android.support.v4.view.ViewPager;
+import android.gesture.Gesture;
+import android.gesture.GestureLibrary;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureOverlayView;
+import android.gesture.Prediction;
+import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 
 import com.kaloer.filepicker.FilePickerActivity;
 import org.fedorahosted.tennera.jgettext.Catalog;
@@ -35,9 +42,8 @@ import antlr.RecognitionException;
 import antlr.TokenStreamException;
 
 import ru.securelayer.rad.ando.R;
-import ru.securelayer.rad.ando.MessageAdapter;
 
-public class AndoMain extends Activity
+public class AndoMain extends Activity implements OnGesturePerformedListener
 {
     private static final String PREFERENCE_FILE = "AndoGettextResourceEditor";
     private static final String RESOURCE_FILENAME_KEY = "RESOURCE_FILENAME";
@@ -45,12 +51,17 @@ public class AndoMain extends Activity
 
     private static final int REQUEST_PICK_FILE = 1;
 
+    private TextView widgetMsgId = null;
+    private EditText widgetMsgStr = null;
+
     private String resourceFileName = null;
     private Catalog catalog = null;
     private ArrayList<Message> messages = null;
-    private Context ctx = null;
-    private MessageAdapter pagerAdapter = null;
-    private ViewPager messagePager = null;
+    private ListIterator<Message> iterator = null;
+    private Boolean directionForward = true;
+
+    private GestureLibrary mLibrary;
+    private GestureOverlayView gestures;
 
     private int msgTotal = 0;
     private int msgTrans = 0;
@@ -68,6 +79,18 @@ public class AndoMain extends Activity
         setContentView(R.layout.main);
 
         getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.icon);
+
+        widgetMsgId = (TextView) findViewById(R.id.wMsgId);
+        widgetMsgStr = (EditText) findViewById(R.id.wMsgStr);
+
+        this.messages = new ArrayList<Message>();
+
+        this.mLibrary = GestureLibraries.fromRawResource(this, R.raw.gestures);
+        if (!this.mLibrary.load()) {
+            finish();
+        }
+        this.gestures = (GestureOverlayView) findViewById(R.id.gestures_overlay);
+        this.gestures.addOnGesturePerformedListener(this);
     }
 
     @Override
@@ -97,11 +120,11 @@ public class AndoMain extends Activity
     @Override
     protected void onPause() {
         super.onPause();
-        if (this.resourceFileName == null && this.messagePager != null) {
-            if (! writeInstanceState(this)) {
-                showNotification(getString(R.string.activity_saved_not));
-            }
-        }
+        // if (this.resourceFileName == null && this.messagePager != null) {
+        //     if (! writeInstanceState(this)) {
+        //         showNotification(getString(R.string.activity_saved_not));
+        //     }
+        // }
     }
 
     @Override
@@ -178,7 +201,7 @@ public class AndoMain extends Activity
             if (! filename.equals("")) {
                 this.loadCatalog(filename);
                 int position = pref.getInt(RESOURCE_POSITION_KEY, 0);
-                messagePager.setCurrentItem(position, true);
+                // messagePager.setCurrentItem(position, true);
             }
             return true;
         }
@@ -188,10 +211,24 @@ public class AndoMain extends Activity
     public boolean writeInstanceState(Context c) {
         SharedPreferences pref = c.getSharedPreferences(AndoMain.PREFERENCE_FILE, MODE_WORLD_READABLE);
         SharedPreferences.Editor editor = pref.edit();
-        int position = this.messagePager.getCurrentItem();
-        editor.putString(RESOURCE_FILENAME_KEY, resourceFileName);
-        editor.putInt(RESOURCE_POSITION_KEY, position);
+        // int position = this.messagePager.getCurrentItem();
+        // editor.putString(RESOURCE_FILENAME_KEY, resourceFileName);
+        // editor.putInt(RESOURCE_POSITION_KEY, position);
         return (editor.commit());
+    }
+
+    public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
+        ArrayList predictions = this.mLibrary.recognize(gesture);
+
+        // We want at least one prediction
+        if (predictions.size() > 0) {
+            Prediction prediction = (Prediction) predictions.get(0);
+            // We want at least some confidence in the result
+            if (prediction.score > 1.0) {
+                // Show the spell
+                Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     /**
@@ -200,17 +237,8 @@ public class AndoMain extends Activity
      * @param fileName The full path to resource file on filesystem.
      */
     protected void loadCatalog(String fileName) {
-        this.messages = new ArrayList<Message>();
-
-        this.pagerAdapter = new MessageAdapter(this, this.messages);
-        this.messagePager = (ViewPager) findViewById(R.id.view_pager);
-        this.messagePager.setAdapter(this.pagerAdapter);
-
-        TextView advice = (TextView) findViewById(R.id.advice);
-        if (advice != null) {
-            ((LinearLayout) advice.getParent()).removeView((View) advice);
-        }
-
+        this.catalog = null;
+        this.messages.clear();
         try {
             try {
                 File poFile = new File(fileName);
@@ -223,14 +251,14 @@ public class AndoMain extends Activity
                 }
                 this.catalog = parser.getCatalog();
                 // Iterate of file's items.
-                this.messages.clear();
                 for (Message m : this.catalog){
                     if (! m.isHeader()) {
                         this.messages.add(m);
                     }
                 }
+                iterator = this.messages.listIterator();
                 // Show first page
-                this.messagePager.setCurrentItem(0, true);
+                this.nextMessage();
                 // Show notification
                 showNotification(getString(R.string.resource_loaded));
                 // Update statistic
@@ -245,31 +273,51 @@ public class AndoMain extends Activity
      * @param fileName The full path to resource file on filesystem.
      */
     protected void saveCatalog(String fileName) {
-        View page = this.messagePager.getFocusedChild();
-        int position = this.messagePager.getCurrentItem();
-        this.pagerAdapter.applyIfChanged(page, position);
+        // View page = this.messagePager.getFocusedChild();
+        // int position = this.messagePager.getCurrentItem();
+        // this.pagerAdapter.applyIfChanged(page, position);
 
-        PoWriter writer = new PoWriter();
-        CharSequence msg;
-        try {
-            File poFile = new File(fileName);
-            writer.write(catalog, poFile);
-            msg = getString(R.string.resource_saved);
-        } catch(IOException ex) {
-            msg = getString(R.string.resource_saved_not);
+        // PoWriter writer = new PoWriter();
+        // CharSequence msg;
+        // try {
+        //     File poFile = new File(fileName);
+        //     writer.write(catalog, poFile);
+        //     msg = getString(R.string.resource_saved);
+        // } catch(IOException ex) {
+        //     msg = getString(R.string.resource_saved_not);
+        // }
+        // showNotification(msg);
+    }
+    protected void prevMessage() {
+        if (iterator.hasPrevious()) {
+            if (directionForward == true) {
+                directionForward = false;
+                iterator.previous();
+            }
+            this.fillMsgWidgets(iterator.previous());
         }
-        showNotification(msg);
+    }
+
+    protected void nextMessage() {
+        if (iterator.hasNext()) {
+            if (directionForward == false) {
+                directionForward = true;
+                iterator.next();
+            }
+            this.fillMsgWidgets(iterator.next());
+        }
+    }
+
+    protected void fillMsgWidgets(Message message) {
+        this.widgetMsgId.setText(message.getMsgid());
+        this.widgetMsgStr.setText(message.getMsgstr());
     }
 
     /**
      * Copies the content from original widget into translated one.
      */
     protected void msgstrCopy() {
-        View page = this.messagePager.getFocusedChild();
-        TextView wOrig = (TextView) page.findViewById(R.id.textOriginal);
-        EditText wEdit = (EditText) page.findViewById(R.id.editTranslated);
-        wEdit.setText(wOrig.getText());
-        pagerAdapter.notifyDataSetChanged();
+        widgetMsgStr.setText(widgetMsgId.getText());
     }
 
     /**
