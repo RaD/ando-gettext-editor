@@ -223,10 +223,27 @@ public class AndoMain extends Activity implements OnGesturePerformedListener
         // We want at least one prediction
         if (predictions.size() > 0) {
             Prediction prediction = (Prediction) predictions.get(0);
-            // We want at least some confidence in the result
             if (prediction.score > 1.0) {
-                // Show the spell
-                Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+                String action = prediction.name;
+                if ("next".equals(action)) {
+                    this.showNotification(getString(R.string.next_token));
+                    this.nextMessage();
+                } else if ("prev".equals(action)) {
+                    this.showNotification(getString(R.string.prev_token));
+                    this.prevMessage();
+                } else if ("next_fuzzy".equals(action)) {
+                    this.showNotification(getString(R.string.next_token_fuzzy));
+                    this.nextMessage();
+                } else if ("prev_fuzzy".equals(action)) {
+                    this.showNotification(getString(R.string.prev_token_fuzzy));
+                    this.prevMessage();
+                } else if ("next_untranslated".equals(action)) {
+                    this.showNotification(getString(R.string.next_token_untranslated));
+                    this.nextMessage();
+                } else if ("prev_untranslated".equals(action)) {
+                    this.showNotification(getString(R.string.prev_token_untranslated));
+                    this.prevMessage();
+                }
             }
         }
     }
@@ -273,23 +290,20 @@ public class AndoMain extends Activity implements OnGesturePerformedListener
      * @param fileName The full path to resource file on filesystem.
      */
     protected void saveCatalog(String fileName) {
-        // View page = this.messagePager.getFocusedChild();
-        // int position = this.messagePager.getCurrentItem();
-        // this.pagerAdapter.applyIfChanged(page, position);
-
-        // PoWriter writer = new PoWriter();
-        // CharSequence msg;
-        // try {
-        //     File poFile = new File(fileName);
-        //     writer.write(catalog, poFile);
-        //     msg = getString(R.string.resource_saved);
-        // } catch(IOException ex) {
-        //     msg = getString(R.string.resource_saved_not);
-        // }
-        // showNotification(msg);
+        PoWriter writer = new PoWriter();
+        CharSequence msg;
+        try {
+            File poFile = new File(fileName);
+            writer.write(catalog, poFile);
+            msg = getString(R.string.resource_saved);
+        } catch(IOException ex) {
+            msg = getString(R.string.resource_saved_not);
+        }
+        showNotification(msg);
     }
+
     protected void prevMessage() {
-        if (iterator.hasPrevious()) {
+        if (iterator != null && iterator.hasPrevious()) {
             if (directionForward == true) {
                 directionForward = false;
                 iterator.previous();
@@ -299,7 +313,7 @@ public class AndoMain extends Activity implements OnGesturePerformedListener
     }
 
     protected void nextMessage() {
-        if (iterator.hasNext()) {
+        if (iterator != null && iterator.hasNext()) {
             if (directionForward == false) {
                 directionForward = true;
                 iterator.next();

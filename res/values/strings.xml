@@ -9,6 +9,13 @@
     <string name="activity_resumed">Activity Resumed</string>
     <string name="activity_saved_not">Activity Not Saved</string>
 
+    <string name="next_token">Next Message</string>
+    <string name="prev_token">Previous Message</string>
+    <string name="next_token_fuzzy">Next Fuzzy Message</string>
+    <string name="prev_token_fuzzy">Previous Fuzzy Message</string>
+    <string name="next_token_untranslated">Next Untranslated Message</string>
+    <string name="prev_token_untranslated">Previous Untranslated Message</string>
+
     <string name="menu_open">Open</string>
     <string name="menu_save">Save</string>
     <string name="menu_copy">Copy</string>
