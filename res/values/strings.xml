@@ -10,14 +10,18 @@
     <string name="activity_resumed">Activity Resumed</string>
     <string name="activity_saved_not">Activity Not Saved</string>
 
-    <string name="next_token">Next Message</string>
-    <string name="prev_token">Previous Message</string>
     <string name="next_token_fuzzy">Next Fuzzy Message</string>
     <string name="prev_token_fuzzy">Previous Fuzzy Message</string>
     <string name="next_token_untranslated">Next Untranslated Message</string>
     <string name="prev_token_untranslated">Previous Untranslated Message</string>
+    <string name="fuzzy_set">Message is marked as Fuzzy</string>
+    <string name="fuzzy_unset">Fuzzy mark is removed</string>
+
+    <string name="fuzzy_exist_no">There is no Fuzzy Messages!</string>
+    <string name="trans_exist_no">There is no Untranslated Messages!</string>
 
     <string name="menu_open">Open</string>
     <string name="menu_save">Save</string>
     <string name="menu_copy">Copy</string>
+    <string name="menu_fuzzy">Fuzzy</string>
 </resources>

@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.ListIterator;
 
 import android.content.res.Configuration;
 import android.app.Activity;
@@ -45,7 +43,7 @@ import antlr.TokenStreamException;
 
 import ru.securelayer.rad.ando.R;
 
-public class AndoMain extends Activity 
+public class AndoMain extends Activity
     implements OnGesturePerformedListener, TextWatcher
 {
     private static final String PREFERENCE_FILE = "AndoGettextResourceEditor";
@@ -61,13 +59,13 @@ public class AndoMain extends Activity
     private Catalog catalog = null;
     private ArrayList<Message> messages = null;
     private Message token = null;
-    private ListIterator<Message> iterator = null;
 
-    private Boolean directionForward = true;
     private Boolean procTextChanged = false;
 
     private GestureLibrary mLibrary;
     private GestureOverlayView gestures;
+
+    private int index = 0;
 
     private int msgTotal = 0;
     private int msgTrans = 0;
@@ -174,6 +172,9 @@ public class AndoMain extends Activity
             case R.id.menu_copy:
                 msgstrCopy();
                 return true;
+            case R.id.menu_fuzzy:
+                msgstrFuzzy();
+                return true;
         }
         return false;
     }
@@ -236,23 +237,18 @@ public class AndoMain extends Activity
             if (prediction.score > 1.0) {
                 String action = prediction.name;
                 if ("next".equals(action)) {
-                    this.showNotification(getString(R.string.next_token));
                     this.nextMessage();
                 } else if ("prev".equals(action)) {
-                    this.showNotification(getString(R.string.prev_token));
                     this.prevMessage();
                 } else if ("next_fuzzy".equals(action)) {
-                    this.showNotification(getString(R.string.next_token_fuzzy));
-                    this.nextMessage();
+                    this.nextMessageFuzzy();
                 } else if ("prev_fuzzy".equals(action)) {
                     this.showNotification(getString(R.string.prev_token_fuzzy));
-                    this.prevMessage();
+                    this.prevMessageFuzzy();
                 } else if ("next_untranslated".equals(action)) {
-                    this.showNotification(getString(R.string.next_token_untranslated));
-                    this.nextMessage();
+                    this.nextMessageTrans();
                 } else if ("prev_untranslated".equals(action)) {
-                    this.showNotification(getString(R.string.prev_token_untranslated));
-                    this.prevMessage();
+                    this.prevMessageTrans();
                 }
             }
         }
@@ -293,10 +289,10 @@ public class AndoMain extends Activity
                         this.messages.add(m);
                     }
                 }
-                iterator = this.messages.listIterator();
                 // Show notification
                 showNotification(getString(R.string.resource_loaded));
                 // Show first page
+                this.index = 0;
                 this.nextMessage();
             } catch(FileNotFoundException ex) {}
         } catch(IOException ex) {}
@@ -325,22 +321,98 @@ public class AndoMain extends Activity
     }
 
     protected void prevMessage() {
-        if (iterator != null && iterator.hasPrevious()) {
-            if (directionForward == true) {
-                directionForward = false;
-                iterator.previous();
+        if (this.messages != null) {
+            Message msg = this.messages.get(this.index);
+            this.fillMsgWidgets(msg);
+            this.index = (this.index - 1) % this.messages.size();
+        }
+    }
+
+    protected void prevMessageFuzzy() {
+        if (this.messages != null) {
+            if (0 == this.msgFuzzy) {
+                this.showNotification(getString(R.string.fuzzy_exist_no));
+            } else {
+                int pointer = this.index - 1;
+                while (pointer != this.index) {
+                    Message msg = this.messages.get(pointer);
+                    if (msg.isFuzzy()) {
+                        this.fillMsgWidgets(msg);
+                        break;
+                    }
+                    pointer = (pointer - 1) % this.messages.size();
+                }
+                this.index = pointer;
+                this.showNotification(getString(R.string.prev_token_fuzzy));
             }
-            this.fillMsgWidgets(iterator.previous());
+        }
+    }
+
+    protected void prevMessageTrans() {
+        if (this.messages != null) {
+            if (0 == this.msgTrans) {
+                this.showNotification(getString(R.string.trans_exist_no));
+            } else {
+                int pointer = this.index - 1;
+                while (pointer != this.index) {
+                    Message msg = this.messages.get(pointer);
+                    if ("".equals(msg.getMsgstr())) {
+                        this.fillMsgWidgets(msg);
+                        break;
+                    }
+                    pointer = (pointer - 1) % this.messages.size();
+                }
+                this.index = pointer;
+                this.showNotification(getString(R.string.prev_token_untranslated));
+            }
         }
     }
 
     protected void nextMessage() {
-        if (iterator != null && iterator.hasNext()) {
-            if (directionForward == false) {
-                directionForward = true;
-                iterator.next();
+        if (this.messages != null) {
+            Message msg = this.messages.get(this.index);
+            this.fillMsgWidgets(msg);
+            this.index = (this.index + 1) % this.messages.size();
+        }
+    }
+
+    protected void nextMessageFuzzy() {
+        if (this.messages != null) {
+            if (0 == this.msgFuzzy) {
+                this.showNotification(getString(R.string.fuzzy_exist_no));
+            } else {
+                int pointer = this.index + 1;
+                while (pointer != this.index) {
+                    Message msg = this.messages.get(pointer);
+                    if (msg.isFuzzy()) {
+                        this.fillMsgWidgets(msg);
+                        break;
+                    }
+                    pointer = (pointer + 1) % this.messages.size();
+                }
+                this.index = pointer;
+                this.showNotification(getString(R.string.next_token_fuzzy));
             }
-            this.fillMsgWidgets(iterator.next());
+        }
+    }
+
+    protected void nextMessageTrans() {
+        if (this.messages != null) {
+            if (0 == this.msgTrans) {
+                this.showNotification(getString(R.string.trans_exist_no));
+            } else {
+                int pointer = this.index + 1;
+                while (pointer != this.index) {
+                    Message msg = this.messages.get(pointer);
+                    if ("".equals(msg.getMsgstr())) {
+                        this.fillMsgWidgets(msg);
+                        break;
+                    }
+                    pointer = (pointer + 1) % this.messages.size();
+                }
+                this.index = pointer;
+                this.showNotification(getString(R.string.next_token_untranslated));
+            }
         }
     }
 
@@ -357,6 +429,19 @@ public class AndoMain extends Activity
     protected void msgstrCopy() {
         if (this.token != null) {
             this.widgetMsgStr.setText(this.widgetMsgId.getText());
+        }
+    }
+
+    protected void msgstrFuzzy() {
+        if (this.token != null) {
+            boolean state = this.token.isFuzzy();
+            this.token.setFuzzy(! state);
+            this.updateTitle();
+            if (state) {
+                showNotification(getString(R.string.fuzzy_unset));
+            } else {
+                showNotification(getString(R.string.fuzzy_set));
+            }
         }
     }
 
