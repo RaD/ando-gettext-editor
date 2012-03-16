@@ -9,7 +9,7 @@
               android:maxSdkVersion="15" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application  android:icon="@drawable/icon" android:label="@string/app_name" >
-        <activity android:name="AndoMain"
+        <activity android:name="GettextActivity"
                   android:label="@string/app_name"
                   android:configChanges="orientation|keyboardHidden"
                   >

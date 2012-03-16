@@ -43,7 +43,7 @@ import antlr.TokenStreamException;
 
 import ru.securelayer.rad.ando.R;
 
-public class AndoMain extends Activity
+public class GettextActivity extends Activity
     implements OnGesturePerformedListener, TextWatcher
 {
     private static final String PREFERENCE_FILE = "AndoGettextResourceEditor";
@@ -212,7 +212,7 @@ public class AndoMain extends Activity
     }
 
     public boolean readInstanceState(Context c) {
-        SharedPreferences pref = c.getSharedPreferences(AndoMain.PREFERENCE_FILE, MODE_WORLD_READABLE);
+        SharedPreferences pref = c.getSharedPreferences(GettextActivity.PREFERENCE_FILE, MODE_WORLD_READABLE);
         if (pref.contains(RESOURCE_FILENAME_KEY) && pref.contains(RESOURCE_POSITION_KEY)) {
             String filename = pref.getString(RESOURCE_FILENAME_KEY, "");
             if (! filename.equals("")) {
@@ -226,7 +226,7 @@ public class AndoMain extends Activity
     }
 
     public boolean writeInstanceState(Context c) {
-        SharedPreferences pref = c.getSharedPreferences(AndoMain.PREFERENCE_FILE, MODE_WORLD_READABLE);
+        SharedPreferences pref = c.getSharedPreferences(GettextActivity.PREFERENCE_FILE, MODE_WORLD_READABLE);
         SharedPreferences.Editor editor = pref.edit();
         // int position = this.messagePager.getCurrentItem();
         // editor.putString(RESOURCE_FILENAME_KEY, resourceFileName);
