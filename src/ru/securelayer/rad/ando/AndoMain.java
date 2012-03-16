@@ -52,6 +52,11 @@ public class AndoMain extends Activity
 
     private static final int REQUEST_PICK_FILE = 1;
 
+    private static final int MSG_CURRENT = 0;
+    private static final int MSG_NEXT = 1;
+    private static final int MSG_NEXT_FUZZY = 2;
+    private static final int MSG_NEXT_TRANS = 3;
+
     private TextView widgetMsgId = null;
     private EditText widgetMsgStr = null;
 
@@ -59,6 +64,7 @@ public class AndoMain extends Activity
     private Catalog catalog = null;
     private ArrayList<Message> messages = null;
     private Message token = null;
+    private boolean isCatalogReady = false;
 
     private Boolean procTextChanged = false;
 
@@ -235,20 +241,23 @@ public class AndoMain extends Activity
         if (predictions.size() > 0) {
             Prediction prediction = (Prediction) predictions.get(0);
             if (prediction.score > 1.0) {
+                Message msg = null;
                 String action = prediction.name;
                 if ("next".equals(action)) {
-                    this.nextMessage();
+                    msg = this.getNext(+1, MSG_NEXT);
                 } else if ("prev".equals(action)) {
-                    this.prevMessage();
+                    msg = this.getNext(-1, MSG_NEXT);
                 } else if ("next_fuzzy".equals(action)) {
-                    this.nextMessageFuzzy();
+                    msg = this.getNext(+1, MSG_NEXT_FUZZY);
                 } else if ("prev_fuzzy".equals(action)) {
-                    this.showNotification(getString(R.string.prev_token_fuzzy));
-                    this.prevMessageFuzzy();
+                    msg = this.getNext(-1, MSG_NEXT_FUZZY);
                 } else if ("next_untranslated".equals(action)) {
-                    this.nextMessageTrans();
+                    msg = this.getNext(+1, MSG_NEXT_TRANS);
                 } else if ("prev_untranslated".equals(action)) {
-                    this.prevMessageTrans();
+                    msg = this.getNext(-1, MSG_NEXT_TRANS);
+                }
+                if (msg != null) {
+                    this.fillMsgWidgets(msg);
                 }
             }
         }
@@ -284,16 +293,17 @@ public class AndoMain extends Activity
                 }
                 this.catalog = parser.getCatalog();
                 // Iterate of file's items.
-                for (Message m : this.catalog){
+                for (Message m : this.catalog) {
                     if (! m.isHeader()) {
                         this.messages.add(m);
                     }
                 }
+                this.isCatalogReady = true;
                 // Show notification
                 showNotification(getString(R.string.resource_loaded));
                 // Show first page
                 this.index = 0;
-                this.nextMessage();
+                this.fillMsgWidgets(this.getNext(0, MSG_CURRENT));
             } catch(FileNotFoundException ex) {}
         } catch(IOException ex) {}
     }
@@ -305,7 +315,7 @@ public class AndoMain extends Activity
      */
     protected void saveCatalog(String fileName) {
         CharSequence msg;
-        if (0 == this.messages.size()) {
+        if (! this.isCatalogReady) {
             msg = getString(R.string.resource_ready_not);
         } else {
             PoWriter writer = new PoWriter();
@@ -320,100 +330,58 @@ public class AndoMain extends Activity
         showNotification(msg);
     }
 
-    protected void prevMessage() {
-        if (this.messages != null) {
-            Message msg = this.messages.get(this.index);
-            this.fillMsgWidgets(msg);
-            this.index = (this.index - 1) % this.messages.size();
-        }
+    protected int cycleIndex(int current, int increment, int size) {
+        int pointer = current;
+        pointer += increment;
+        if (0 > pointer)
+            pointer = size - 1;
+        if (size == pointer)
+            pointer = 0;
+        return pointer;
     }
 
-    protected void prevMessageFuzzy() {
-        if (this.messages != null) {
-            if (0 == this.msgFuzzy) {
-                this.showNotification(getString(R.string.fuzzy_exist_no));
-            } else {
-                int pointer = this.index - 1;
-                while (pointer != this.index) {
-                    Message msg = this.messages.get(pointer);
-                    if (msg.isFuzzy()) {
-                        this.fillMsgWidgets(msg);
-                        break;
-                    }
-                    pointer = (pointer - 1) % this.messages.size();
+    protected Message getNext(int increment, int action) {
+        int notify = 0;
+        int size = this.messages.size();
+        boolean found = false;
+
+        if (! this.isCatalogReady) {
+            this.showNotification("No Messages!");
+            return null;
+        }
+
+        if (MSG_CURRENT == action) {}
+        if (MSG_NEXT == action) {
+            this.index = this.cycleIndex(this.index, increment, size);
+            notify = (-1 == increment) ? R.string.prev_token : R.string.next_token;
+        }
+        if (MSG_NEXT_FUZZY == action) {
+            int pointer = this.cycleIndex(this.index, increment, size);
+            do {
+                Message msg = this.messages.get(pointer);
+                if (msg.isFuzzy()) {
+                    break;
                 }
-                this.index = pointer;
-                this.showNotification(getString(R.string.prev_token_fuzzy));
-            }
+                pointer = this.cycleIndex(pointer, increment, size);
+            } while (pointer != this.index);
+            this.index = pointer;
+            notify = (-1 == increment) ? R.string.prev_token_fuzzy : R.string.next_token_fuzzy;
         }
-    }
-
-    protected void prevMessageTrans() {
-        if (this.messages != null) {
-            if (0 == this.msgTrans) {
-                this.showNotification(getString(R.string.trans_exist_no));
-            } else {
-                int pointer = this.index - 1;
-                while (pointer != this.index) {
-                    Message msg = this.messages.get(pointer);
-                    if ("".equals(msg.getMsgstr())) {
-                        this.fillMsgWidgets(msg);
-                        break;
-                    }
-                    pointer = (pointer - 1) % this.messages.size();
+        if (MSG_NEXT_TRANS == action) {
+            int pointer = this.cycleIndex(this.index, increment, size);
+            do {
+                Message msg = this.messages.get(pointer);
+                if ("".equals(msg.getMsgstr())) {
+                    break;
                 }
-                this.index = pointer;
-                this.showNotification(getString(R.string.prev_token_untranslated));
-            }
+                pointer = this.cycleIndex(pointer, increment, size);
+            } while (pointer != this.index);
+            this.index = pointer;
+            notify = (-1 == increment) ? R.string.prev_token_trans : R.string.next_token_trans;
         }
-    }
-
-    protected void nextMessage() {
-        if (this.messages != null) {
-            Message msg = this.messages.get(this.index);
-            this.fillMsgWidgets(msg);
-            this.index = (this.index + 1) % this.messages.size();
-        }
-    }
-
-    protected void nextMessageFuzzy() {
-        if (this.messages != null) {
-            if (0 == this.msgFuzzy) {
-                this.showNotification(getString(R.string.fuzzy_exist_no));
-            } else {
-                int pointer = this.index + 1;
-                while (pointer != this.index) {
-                    Message msg = this.messages.get(pointer);
-                    if (msg.isFuzzy()) {
-                        this.fillMsgWidgets(msg);
-                        break;
-                    }
-                    pointer = (pointer + 1) % this.messages.size();
-                }
-                this.index = pointer;
-                this.showNotification(getString(R.string.next_token_fuzzy));
-            }
-        }
-    }
-
-    protected void nextMessageTrans() {
-        if (this.messages != null) {
-            if (0 == this.msgTrans) {
-                this.showNotification(getString(R.string.trans_exist_no));
-            } else {
-                int pointer = this.index + 1;
-                while (pointer != this.index) {
-                    Message msg = this.messages.get(pointer);
-                    if ("".equals(msg.getMsgstr())) {
-                        this.fillMsgWidgets(msg);
-                        break;
-                    }
-                    pointer = (pointer + 1) % this.messages.size();
-                }
-                this.index = pointer;
-                this.showNotification(getString(R.string.next_token_untranslated));
-            }
-        }
+        if (0 < notify)
+            this.showNotification(getString(notify));
+        return this.messages.get(this.index);
     }
 
     protected void fillMsgWidgets(Message message) {
