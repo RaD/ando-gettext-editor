@@ -49,6 +49,9 @@ public class GettextActivity extends Activity
     private static final String PREFERENCE_FILE = "AndoGettextResourceEditor";
     private static final String RESOURCE_FILENAME_KEY = "RESOURCE_FILENAME";
     private static final String RESOURCE_POSITION_KEY = "RESOURCE_POSITION";
+    private static final String STATE_POSITION_KEY = "MSG_POSITION";
+    private static final String STATE_RESOURCE_KEY = "MSG_RESOURCE";
+
 
     private static final int REQUEST_PICK_FILE = 1;
 
@@ -108,24 +111,45 @@ public class GettextActivity extends Activity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle inState) {
-        super.onRestoreInstanceState(inState);
-    }
-
-    /**
-     * Loads last state of UI and variables.
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (readInstanceState(this)) {
-            showNotification(getString(R.string.activity_resumed));
+    protected void onSaveInstanceState(Bundle state) {
+        if (isCatalogReady) {
+            state.putString(STATE_RESOURCE_KEY, this.resourceFileName);
+            state.putInt(STATE_POSITION_KEY, this.index);
+            this.saveCatalog();
         }
+        super.onSaveInstanceState(state);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle state) {
+        if (! isCatalogReady) {
+            this.resourceFileName = state.getString(STATE_RESOURCE_KEY);
+            this.index = state.getInt(STATE_POSITION_KEY, 0);
+            this.loadCatalogSeek(this.resourceFileName, this.index);
+        }
+        super.onRestoreInstanceState(state);
+    }
+
+    public boolean writeInstanceState(Context c) {
+        this.saveCatalog();
+        SharedPreferences pref = c.getSharedPreferences(GettextActivity.PREFERENCE_FILE, MODE_WORLD_READABLE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(RESOURCE_FILENAME_KEY, this.resourceFileName);
+        editor.putInt(RESOURCE_POSITION_KEY, this.index);
+        return (editor.commit());
+    }
+
+    public boolean readInstanceState(Context c) {
+        SharedPreferences pref = c.getSharedPreferences(GettextActivity.PREFERENCE_FILE, MODE_WORLD_READABLE);
+        if (pref.contains(RESOURCE_FILENAME_KEY) && pref.contains(RESOURCE_POSITION_KEY)) {
+            this.resourceFileName = pref.getString(RESOURCE_FILENAME_KEY, "");
+            this.index = pref.getInt(RESOURCE_POSITION_KEY, 0);
+            if (! this.resourceFileName.equals("")) {
+                this.loadCatalogSeek(this.resourceFileName, this.index);
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -134,11 +158,20 @@ public class GettextActivity extends Activity
     @Override
     protected void onPause() {
         super.onPause();
-        // if (this.resourceFileName == null && this.messagePager != null) {
-        //     if (! writeInstanceState(this)) {
-        //         showNotification(getString(R.string.activity_saved_not));
-        //     }
-        // }
+        if (isCatalogReady) {
+            this.writeInstanceState(this);
+        }
+    }
+
+    /**
+     * Loads last state of UI and variables.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (! isCatalogReady) {
+            readInstanceState(this);
+        }
     }
 
     @Override
@@ -170,16 +203,16 @@ public class GettextActivity extends Activity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_open:
-                chooseAndOpen();
+                this.chooseAndOpen();
                 return true;
             case R.id.menu_save:
-                saveCatalog(resourceFileName);
+                this.saveCatalog();
                 return true;
             case R.id.menu_copy:
-                msgstrCopy();
+                this.msgstrCopy();
                 return true;
             case R.id.menu_fuzzy:
-                msgstrFuzzy();
+                this.msgstrFuzzy();
                 return true;
         }
         return false;
@@ -209,29 +242,6 @@ public class GettextActivity extends Activity
         intent.putExtra(FilePickerActivity.EXTRA_ACCEPTED_FILE_EXTENSIONS, extensions);
         // start the activity
         startActivityForResult(intent, REQUEST_PICK_FILE);
-    }
-
-    public boolean readInstanceState(Context c) {
-        SharedPreferences pref = c.getSharedPreferences(GettextActivity.PREFERENCE_FILE, MODE_WORLD_READABLE);
-        if (pref.contains(RESOURCE_FILENAME_KEY) && pref.contains(RESOURCE_POSITION_KEY)) {
-            String filename = pref.getString(RESOURCE_FILENAME_KEY, "");
-            if (! filename.equals("")) {
-                this.loadCatalog(filename);
-                int position = pref.getInt(RESOURCE_POSITION_KEY, 0);
-                // messagePager.setCurrentItem(position, true);
-            }
-            return true;
-        }
-        return false;
-    }
-
-    public boolean writeInstanceState(Context c) {
-        SharedPreferences pref = c.getSharedPreferences(GettextActivity.PREFERENCE_FILE, MODE_WORLD_READABLE);
-        SharedPreferences.Editor editor = pref.edit();
-        // int position = this.messagePager.getCurrentItem();
-        // editor.putString(RESOURCE_FILENAME_KEY, resourceFileName);
-        // editor.putInt(RESOURCE_POSITION_KEY, position);
-        return (editor.commit());
     }
 
     public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
@@ -279,6 +289,9 @@ public class GettextActivity extends Activity
      * @param fileName The full path to resource file on filesystem.
      */
     protected void loadCatalog(String fileName) {
+        this.loadCatalogSeek(fileName, 0);
+    }
+    protected void loadCatalogSeek(String fileName, int position) {
         this.catalog = null;
         this.messages.clear();
         try {
@@ -302,7 +315,7 @@ public class GettextActivity extends Activity
                 // Show notification
                 showNotification(getString(R.string.resource_loaded));
                 // Show first page
-                this.index = 0;
+                this.index = position;
                 this.fillMsgWidgets(this.getNext(0, MSG_CURRENT));
             } catch(FileNotFoundException ex) {}
         } catch(IOException ex) {}
@@ -313,14 +326,14 @@ public class GettextActivity extends Activity
      *
      * @param fileName The full path to resource file on filesystem.
      */
-    protected void saveCatalog(String fileName) {
+    protected void saveCatalog() {
         CharSequence msg;
         if (! this.isCatalogReady) {
             msg = getString(R.string.resource_ready_not);
         } else {
             PoWriter writer = new PoWriter();
             try {
-                File poFile = new File(fileName);
+                File poFile = new File(this.resourceFileName);
                 writer.write(catalog, poFile);
                 msg = getString(R.string.resource_saved);
             } catch(IOException ex) {
