@@ -5,15 +5,15 @@
         android:title="@string/menu_open">
     </item>
     <item
-        android:id="@+id/menu_save"
-        android:title="@string/menu_save">
-    </item>
-    <item
         android:id="@+id/menu_copy"
         android:title="@string/menu_copy">
     </item>
     <item
         android:id="@+id/menu_fuzzy"
         android:title="@string/menu_fuzzy">
+    </item>
+    <item
+        android:id="@+id/menu_help"
+        android:title="@string/menu_help">
     </item>
 </menu>

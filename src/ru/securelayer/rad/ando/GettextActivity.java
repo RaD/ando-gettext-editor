@@ -5,12 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import android.content.res.Configuration;
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,12 +19,10 @@ import android.view.Window;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import android.gesture.Gesture;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureLibraries;
@@ -205,14 +203,14 @@ public class GettextActivity extends Activity
             case R.id.menu_open:
                 this.chooseAndOpen();
                 return true;
-            case R.id.menu_save:
-                this.saveCatalog();
-                return true;
             case R.id.menu_copy:
                 this.msgstrCopy();
                 return true;
             case R.id.menu_fuzzy:
                 this.msgstrFuzzy();
+                return true;
+            case R.id.menu_help:
+                this.showHelp();
                 return true;
         }
         return false;
@@ -242,6 +240,11 @@ public class GettextActivity extends Activity
         intent.putExtra(FilePickerActivity.EXTRA_ACCEPTED_FILE_EXTENSIONS, extensions);
         // start the activity
         startActivityForResult(intent, REQUEST_PICK_FILE);
+    }
+
+    protected void showHelp() {
+        Intent intent = new Intent(this, HelpActivity.class);
+        startActivity(intent);
     }
 
     public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
@@ -276,10 +279,12 @@ public class GettextActivity extends Activity
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
     public void onTextChanged(CharSequence s, int start, int before, int count) {}
     public void afterTextChanged(Editable s) {
-        if (! this.procTextChanged) {
-            this.procTextChanged = true;
-            this.token.setMsgstr(s.toString());
-            this.procTextChanged = false;
+        if (this.isCatalogReady) {
+            if (! this.procTextChanged) {
+                this.procTextChanged = true;
+                this.token.setMsgstr(s.toString());
+                this.procTextChanged = false;
+            }
         }
     }
 

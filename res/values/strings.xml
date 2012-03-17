@@ -24,7 +24,73 @@
     <string name="trans_exist_no">There is no Untranslated Messages!</string>
 
     <string name="menu_open">Open</string>
-    <string name="menu_save">Save</string>
     <string name="menu_copy">Copy</string>
     <string name="menu_fuzzy">Fuzzy</string>
+    <string name="menu_help">Help</string>
+
+    <string name="help_name">Help</string>
+    <string name="help_text">
+        <![CDATA[
+        <h1>
+            <img src="icon">
+            Gettext Resource Editor
+        </h1>
+
+        <p>With this application you can translate gettext resources with your Android device. It allows to navigate in messages catalog, to search for untranslated or fuzzy messages. You may mark a message as fuzzy.</p>
+
+        <p>Note that the application saves a resource automaticly, it mean that your changes will not be lost.</p>
+
+        <h2>Authors</h2>
+
+        <p>Main Developer: Ruslan Popov;</p>
+        <p>Java Consultant: Ruslan Markelov;</p>
+        <p>Icon and Market Media Designer: Serg Barkov.</p>
+
+        <h2>Usage</h2>
+
+        <p>Just open the gettext resource, i.e. .po file, and translate it.</p>
+
+        <p>Copy button of menu is very helpful. Also, you may mark the translated message as fuzzy.</p>
+
+        <h3>Status Line</h3>
+
+        <p>The application shows the catalog status on its title.</p>
+        <p><img src="help_status"></p>
+        <p>The status line consists of:</p>
+        <p>*current index in the catalog;</p>
+        <p>* total count of messages inside the catalog;</p>
+        <p>* count of translated messages;</p>
+        <p>* count of messages marked as fuzzy;</p>
+        <p>* count of obsolete messages in the catalog.</p>
+        <p>Also the status line shows the filename of active resource and displays the progress bar of a translation process.</p>
+
+        <h3>Navigation Gestures</h3>
+
+        <p>The behaviour of this application is controlled with a simple set of following gestures:</p>
+        <p>
+            <img src="help_gestures_1">
+            Move to next message of the catalog. Direction is left to right.
+        </p>
+        <p>
+            <img src="help_gestures_2">
+            Move to previous message of the catalog. Direction is right to left.
+        </p>
+        <p>
+            <img src="help_gestures_3">
+            Search for next untranslated message of the catalog. Direction is left to right.
+        </p>
+        <p>
+            <img src="help_gestures_4">
+            Search for previous unstranslated message of the catalog. Direction is right to left.
+        </p>
+        <p>
+            <img src="help_gestures_5">
+            Search for next fuzzy message of the catalog. Direction is left to right.
+        </p>
+        <p>
+            <img src="help_gestures_6">
+            Search for previous fuzzy message of the catalog. Direction is right to left.
+        </p>
+        ]]>
+    </string>
 </resources>
