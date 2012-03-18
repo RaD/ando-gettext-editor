@@ -1,8 +1,8 @@
 <resources>
     <style name="MsgIdWidget">
         <item name="android:background">@drawable/msgid_widget</item>
-        <item name="android:layout_marginTop">0dip</item>
-        <item name="android:layout_marginBottom">4dip</item>
+        <item name="android:layout_marginTop">0px</item>
+        <item name="android:layout_marginBottom">4px</item>
     </style>
     <style name="MsgIdText" parent="@android:style/TextAppearance">
         <item name="android:textSize">16sp</item>
@@ -14,5 +14,10 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">#ff000000</item>
         <item name="android:gravity">left</item>
+    </style>
+
+    <style name="HelpView">
+        <item name="android:paddingLeft">5px</item>
+        <item name="android:paddingRight">5px</item>
     </style>
 </resources>

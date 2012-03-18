@@ -57,7 +57,7 @@
         <p>The application shows the catalog status on its title.</p>
         <p><img src="help_status"></p>
         <p>The status line consists of:</p>
-        <p>*current index in the catalog;</p>
+        <p>* current index in the catalog;</p>
         <p>* total count of messages inside the catalog;</p>
         <p>* count of translated messages;</p>
         <p>* count of messages marked as fuzzy;</p>
@@ -67,30 +67,24 @@
         <h3>Navigation Gestures</h3>
 
         <p>The behaviour of this application is controlled with a simple set of following gestures:</p>
-        <p>
-            <img src="help_gestures_1">
-            Move to next message of the catalog. Direction is left to right.
-        </p>
-        <p>
-            <img src="help_gestures_2">
-            Move to previous message of the catalog. Direction is right to left.
-        </p>
-        <p>
-            <img src="help_gestures_3">
-            Search for next untranslated message of the catalog. Direction is left to right.
-        </p>
-        <p>
-            <img src="help_gestures_4">
-            Search for previous unstranslated message of the catalog. Direction is right to left.
-        </p>
-        <p>
-            <img src="help_gestures_5">
-            Search for next fuzzy message of the catalog. Direction is left to right.
-        </p>
-        <p>
-            <img src="help_gestures_6">
-            Search for previous fuzzy message of the catalog. Direction is right to left.
-        </p>
+
+        <p><img src="help_gestures_1"></p>
+        <p>Move to next message of the catalog. Direction is left to right.</p>
+
+        <p><img src="help_gestures_2"></p>
+        <p>Move to previous message of the catalog. Direction is right to left.</p>
+
+        <p><img src="help_gestures_3"></p>
+        <p>Search for next untranslated message of the catalog. Direction is left to right.</p>
+
+        <p><img src="help_gestures_4"></p>
+        <p>Search for previous unstranslated message of the catalog. Direction is right to left.</p>
+
+        <p><img src="help_gestures_5"></p>
+        <p>Search for next fuzzy message of the catalog. Direction is left to right.</p>
+
+        <p><img src="help_gestures_6"></p>
+        <p>Search for previous fuzzy message of the catalog. Direction is right to left.</p>
         ]]>
     </string>
 </resources>
