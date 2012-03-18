@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="admob_publisher_id">a14f65aaab8fb17</string>
+
     <string name="app_name">Ando</string>
     <string name="resource_choose">... Click \'Menu\' button ...</string>
     <string name="resource_ready_not">No Resource</string>
