@@ -33,6 +33,8 @@ import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 
 import com.kaloer.filepicker.FilePickerActivity;
 import com.google.ads.AdView;
+import com.google.ads.AdSize;
+import com.google.ads.AdRequest;
 import org.fedorahosted.tennera.jgettext.Catalog;
 import org.fedorahosted.tennera.jgettext.Message;
 import org.fedorahosted.tennera.jgettext.catalog.parse.ExtendedCatalogParser;
@@ -62,6 +64,7 @@ public class GettextActivity extends Activity
 
     private TextView widgetMsgId = null;
     private EditText widgetMsgStr = null;
+    private AdView adView = null;
 
     private String resourceFileName = null;
     private Catalog catalog = null;
@@ -100,18 +103,15 @@ public class GettextActivity extends Activity
         final View activityRootView = findViewById(R.id.main_layout);
         activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
             new OnGlobalLayoutListener() {
+
                 @Override
                 public void onGlobalLayout() {
                     Context ctx = getApplicationContext();
-                    AdView ad = (AdView) findViewById(R.id.adView);
                     int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
                     if (heightDiff > 100) {
-                        // if more than 100 pixels, its probably a keyboard...
-                        Toast.makeText(ctx, "Hide Ads", Toast.LENGTH_SHORT).show();
-                        ad.setVisibility(View.INVISIBLE);
+                        hideAdv();
                     } else {
-                        Toast.makeText(ctx, "Show Ads", Toast.LENGTH_SHORT).show();
-                        ad.setVisibility(View.VISIBLE);
+                        showAdv();
                     }
                 }
             }
@@ -128,6 +128,23 @@ public class GettextActivity extends Activity
 
         String title = (String) getTitle() + ": " + getString(R.string.resource_choose);
         setTitle(title);
+    }
+
+    protected void showAdv() {
+        if (this.adView == null) {
+            this.adView = new AdView(this, AdSize.BANNER, getString(R.string.admob_publisher_id));
+            LinearLayout layout = (LinearLayout) findViewById(R.id.main_layout);
+            layout.addView(adView);
+            adView.loadAd(new AdRequest());
+        }
+    }
+
+    protected void hideAdv() {
+        if (this.adView != null) {
+            this.adView.destroy();
+            this.adView.setVisibility(View.GONE);
+            this.adView = null;
+        }
     }
 
     @Override
@@ -170,6 +187,12 @@ public class GettextActivity extends Activity
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onDestroy() {
+        this.hideAdv();
+        super.onDestroy();
     }
 
     /**

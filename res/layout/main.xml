@@ -47,13 +47,4 @@
         android:textSize="16sp"
         android:textColor="#ff000000"
         />
-    <com.google.ads.AdView
-        xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
-        android:id="@+id/adView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/admob_publisher_id"
-        ads:loadAdOnCreate="true"
-        />
 </LinearLayout>
