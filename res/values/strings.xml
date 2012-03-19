@@ -19,11 +19,11 @@
     <string name="prev_token_fuzzy">Previous fuzzy message</string>
     <string name="next_token_trans">Next untranslated message</string>
     <string name="prev_token_trans">Previous untranslated message</string>
-    <string name="fuzzy_set">Message is marked as fuzzy</string>
-    <string name="fuzzy_unset">Fuzzy mark is removed</string>
+    <string name="fuzzy_set">Message was marked as fuzzy</string>
+    <string name="fuzzy_unset">Fuzzy mark was removed</string>
 
-    <string name="fuzzy_exist_no">There are no fuzzy messages!</string>
-    <string name="trans_exist_no">There are no untranslated messages!</string>
+    <string name="fuzzy_exist_no">There are no fuzzy messages</string>
+    <string name="trans_exist_no">There are no untranslated messages</string>
 
     <string name="menu_open">Open</string>
     <string name="menu_copy">Copy</string>
@@ -38,7 +38,7 @@
             Gettext Resource Editor
         </h1>
 
-        <p>With this application you can translate gettext resources with your Android device. It allows you to navigate in messages catalog, to search for untranslated or fuzzy messages. You may mark a message as fuzzy.</p>
+        <p>With this application you can translate gettext resources with your Android device. It allows you to navigate in messages catalog, to search for untranslated or fuzzy messages. You can mark a message as fuzzy.</p>
 
         <p>Note that the application saves a resource automatically, it means that your changes will not be lost.</p>
 
@@ -72,22 +72,22 @@
         <p>The behaviour of this application is controlled with a simple set of following gestures:</p>
 
         <p><img src="help_gestures_1"></p>
-        <p>Move to next message of the catalog. Direction is left to right.</p>
+        <p>Go to the next message of the catalog. Direction is left to right.</p>
 
         <p><img src="help_gestures_2"></p>
-        <p>Move to previous message of the catalog. Direction is right to left.</p>
+        <p>Go to the previous message of the catalog. Direction is right to left.</p>
 
         <p><img src="help_gestures_3"></p>
-        <p>Search for next untranslated message of the catalog. Direction is left to right.</p>
+        <p>Go to the next untranslated message of the catalog. Direction is left to right.</p>
 
         <p><img src="help_gestures_4"></p>
-        <p>Search for previous untranslated message of the catalog. Direction is right to left.</p>
+        <p>Go to the previous untranslated message of the catalog. Direction is right to left.</p>
 
         <p><img src="help_gestures_5"></p>
-        <p>Search for next fuzzy message of the catalog. Direction is left to right.</p>
+        <p>Go to the next fuzzy message of the catalog. Direction is left to right.</p>
 
         <p><img src="help_gestures_6"></p>
-        <p>Search for previous fuzzy message of the catalog. Direction is right to left.</p>
+        <p>Go to the previous fuzzy message of the catalog. Direction is right to left.</p>
         ]]>
     </string>
 </resources>
