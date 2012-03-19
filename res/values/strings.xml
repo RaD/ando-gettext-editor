@@ -5,25 +5,25 @@
     <string name="app_name">Ando</string>
     <string name="resource_choose">... Click \'Menu\' button ...</string>
     <string name="resource_ready_not">No Resource</string>
-    <string name="resource_loaded">Resource Loaded</string>
-    <string name="resource_saved">Resource Saved</string>
-    <string name="resource_saved_not">Resource Not Saved</string>
+    <string name="resource_loaded">Resource loaded</string>
+    <string name="resource_saved">Resource saved</string>
+    <string name="resource_saved_not">Resource not saved</string>
 
-    <string name="activity_resumed">Activity Resumed</string>
-    <string name="activity_saved_not">Activity Not Saved</string>
+    <string name="activity_resumed">Activity resumed</string>
+    <string name="activity_saved_not">Activity not saved</string>
 
-    <string name="no_token">No Messages</string>
-    <string name="next_token">Next Message</string>
-    <string name="prev_token">Previous Message</string>
-    <string name="next_token_fuzzy">Next Fuzzy Message</string>
-    <string name="prev_token_fuzzy">Previous Fuzzy Message</string>
-    <string name="next_token_trans">Next Untranslated Message</string>
-    <string name="prev_token_trans">Previous Untranslated Message</string>
-    <string name="fuzzy_set">Message is marked as Fuzzy</string>
+    <string name="no_token">No messages</string>
+    <string name="next_token">Next message</string>
+    <string name="prev_token">Previous message</string>
+    <string name="next_token_fuzzy">Next fuzzy message</string>
+    <string name="prev_token_fuzzy">Previous fuzzy message</string>
+    <string name="next_token_trans">Next untranslated message</string>
+    <string name="prev_token_trans">Previous untranslated message</string>
+    <string name="fuzzy_set">Message is marked as fuzzy</string>
     <string name="fuzzy_unset">Fuzzy mark is removed</string>
 
-    <string name="fuzzy_exist_no">There is no Fuzzy Messages!</string>
-    <string name="trans_exist_no">There is no Untranslated Messages!</string>
+    <string name="fuzzy_exist_no">There are no fuzzy messages!</string>
+    <string name="trans_exist_no">There are no untranslated messages!</string>
 
     <string name="menu_open">Open</string>
     <string name="menu_copy">Copy</string>
@@ -38,21 +38,22 @@
             Gettext Resource Editor
         </h1>
 
-        <p>With this application you can translate gettext resources with your Android device. It allows to navigate in messages catalog, to search for untranslated or fuzzy messages. You may mark a message as fuzzy.</p>
+        <p>With this application you can translate gettext resources with your Android device. It allows you to navigate in messages catalog, to search for untranslated or fuzzy messages. You may mark a message as fuzzy.</p>
 
-        <p>Note that the application saves a resource automaticly, it mean that your changes will not be lost.</p>
+        <p>Note that the application saves a resource automatically, it means that your changes will not be lost.</p>
 
         <h2>Authors</h2>
 
         <p>Main Developer: Ruslan Popov;</p>
         <p>Java Consultant: Ruslan Markelov;</p>
-        <p>Icon and Market Media Designer: Serg Barkov.</p>
+        <p>Icon and Market Media Designer: Serg Barkov;</p>
+        <p>Ideas and English Consultant: Lúcio Corrêa.</p>
 
         <h2>Usage</h2>
 
         <p>Just open the gettext resource, i.e. .po file, and translate it.</p>
 
-        <p>Copy button of menu is very helpful. Also, you may mark the translated message as fuzzy.</p>
+        <p>Menu copy button is very helpful. Also, you may mark the translated message as fuzzy.</p>
 
         <h3>Status Line</h3>
 
@@ -80,7 +81,7 @@
         <p>Search for next untranslated message of the catalog. Direction is left to right.</p>
 
         <p><img src="help_gestures_4"></p>
-        <p>Search for previous unstranslated message of the catalog. Direction is right to left.</p>
+        <p>Search for previous untranslated message of the catalog. Direction is right to left.</p>
 
         <p><img src="help_gestures_5"></p>
         <p>Search for next fuzzy message of the catalog. Direction is left to right.</p>
