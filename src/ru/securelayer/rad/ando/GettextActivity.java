@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.Window;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,6 +32,7 @@ import android.gesture.Prediction;
 import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 
 import com.kaloer.filepicker.FilePickerActivity;
+import com.google.ads.AdView;
 import org.fedorahosted.tennera.jgettext.Catalog;
 import org.fedorahosted.tennera.jgettext.Message;
 import org.fedorahosted.tennera.jgettext.catalog.parse.ExtendedCatalogParser;
@@ -94,6 +96,21 @@ public class GettextActivity extends Activity
         widgetMsgId = (TextView) findViewById(R.id.wMsgId);
         widgetMsgStr = (EditText) findViewById(R.id.wMsgStr);
         widgetMsgStr.addTextChangedListener(this);
+        widgetMsgStr.setOnFocusChangeListener(
+            new OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    AdView ad = (AdView) findViewById(R.id.adView);
+                    if (v == (View) widgetMsgStr) {
+                        if (hasFocus) {
+                            ad.setVisibility(View.INVISIBLE);
+                        } else {
+                            ad.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            }
+        );
 
         this.messages = new ArrayList<Message>();
 
