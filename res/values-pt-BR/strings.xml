@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ando</string>
+    <string name="resource_choose">... Clique no botão \'Menu\' ...</string>
+    <string name="resource_ready_not">Sem recursos</string>
+    <string name="resource_loaded">Recurso carregado</string>
+    <string name="resource_saved">Recurso salvo</string>
+    <string name="resource_saved_not">Recurso não salvo</string>
+
+    <string name="activity_resumed">Atividade resumida</string>
+    <string name="activity_saved_not">Atividade não resumida</string>
+
+    <string name="no_token">Sem mensagens</string>
+    <string name="next_token">Mensagem posterior</string>
+    <string name="prev_token">Mensagem anterior</string>
+    <string name="next_token_fuzzy">Mensagem imprecisa posterior</string>
+    <string name="prev_token_fuzzy">Mensagem imprecisa anterior</string>
+    <string name="next_token_trans">Mensagem não-traduzida posterior</string>
+    <string name="prev_token_trans">Mensagem não-traduzida anterior</string>
+    <string name="fuzzy_set">Mensagem marcada como imprecisa</string>
+    <string name="fuzzy_unset">Marcação imprecisa removida</string>
+
+    <string name="fuzzy_exist_no">Não há mensagens imprecisas</string>
+    <string name="trans_exist_no">Não há mensagens não-traduzidas</string>
+
+    <string name="menu_open">Abrir</string>
+    <string name="menu_copy">Copiar</string>
+    <string name="menu_fuzzy">Imprecisas</string>
+    <string name="menu_help">Ajuda</string>
+
+    <string name="help_name">Ajuda</string>
+    <string name="help_text">
+        <![CDATA[
+        <h1>
+            <img src="icon">
+            Editor de recursos Gettext 
+        </h1>
+
+        <p> Com esse aplicativo você pode traduzir arquivos de recursos gettext usando o seu dispostivo Android. Ele permite a navegação em catálogos de mensagens, procurar por mensagens imprecisas ou não-traduzidas. Você pode marcar uma mensagem como imprecisa.</p>
+
+        <p>Note que o aplicativo grava o arquivo de recurso automaticamente, então as mudanças não gravadas não serão perdidas.</p>
+
+        <h2>Autores</h2>
+
+        <p> Desenvolvedor principal: Ruslan Popov;</p>
+        <p> Consultor Java: Ruslan Markelov;</p>
+        <p>Ícone e Market Media Designer: Serg Barkov.</p>
+        <p>Ideias e consultor de inglês: Lúcio Corrêa.</p>
+
+        <h2>Uso</h2>
+
+        <p>Basta abrir o arquivo de recursos gettext, e.x. arquivo com extensão .po , e traduzi-lo.</p>
+
+        <p> O botão de menu é de grande ajuda. Você também pode marcar uma mensagem como imprecisa.</p>
+
+        <h3>Linha de status</h3>
+
+        <p>O aplicatico mostra o status do catálago no seu título.</p>
+        <p><img src="help_status"></p>
+        <p>A linha de status consiste em:</p>
+        <p>* indice atual no catálogo;</p>
+        <p>* número total de mensagens no catálogo;</p>
+        <p>* contagem de mensagens não-traduzidas;</p>
+        <p>* contagem de mensagens marcadas como imprecisas;</p>
+        <p>* contagem de mensagens obsoletas no catálogo.</p>
+        <p> A linha de status mostra o nome do arquivo, bem como uma barra de progressão do processo de tradução.</p>
+
+        <h3>Gestos de navegação</h3>
+
+        <p>O comportamento desse aplicativo é controlado com uma série de gestos simples mostrados a seguir:</p>
+        <p>
+            <img src="help_gestures_1">
+            Ir para a mensagem posterior no catálogo. O movimento é da esquerda para a direita.
+        </p>
+        <p>
+            <img src="help_gestures_2">
+             Ir para a mensagem anterior no catálogo. O movimento é da direita para a direita.
+        </p>
+        <p>
+            <img src="help_gestures_3">
+            Ir para a mensagem não-traduzida posterior no catálogo. O movimento é da esquerda para a direita.
+        </p>
+        <p>
+            <img src="help_gestures_4">
+            Ir para a mensagem não-traduzida anterior  no catálogo. O movimento é da direita para a direita.
+        </p>
+        <p>
+            <img src="help_gestures_5">
+            Ir para a mensagem imprecisa  posterior no catálogo. O movimento é da esquerda para a direita.
+        </p>
+        <p>
+            <img src="help_gestures_6">
+            Ir para a mensagem imprecisa anterior no catálogo. O movimento é da direita para a direita.
+        </p>
+        ]]>
+    </string>
+</resources>
