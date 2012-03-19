@@ -15,11 +15,11 @@ import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
 import android.view.Window;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.EditText;
@@ -96,17 +96,22 @@ public class GettextActivity extends Activity
         widgetMsgId = (TextView) findViewById(R.id.wMsgId);
         widgetMsgStr = (EditText) findViewById(R.id.wMsgStr);
         widgetMsgStr.addTextChangedListener(this);
-        widgetMsgStr.setOnFocusChangeListener(
-            new OnFocusChangeListener() {
+
+        final View activityRootView = findViewById(R.id.main_layout);
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
+            new OnGlobalLayoutListener() {
                 @Override
-                public void onFocusChange(View v, boolean hasFocus) {
+                public void onGlobalLayout() {
+                    Context ctx = getApplicationContext();
                     AdView ad = (AdView) findViewById(R.id.adView);
-                    if (v == (View) widgetMsgStr) {
-                        if (hasFocus) {
-                            ad.setVisibility(View.INVISIBLE);
-                        } else {
-                            ad.setVisibility(View.VISIBLE);
-                        }
+                    int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
+                    if (heightDiff > 100) {
+                        // if more than 100 pixels, its probably a keyboard...
+                        Toast.makeText(ctx, "Hide Ads", Toast.LENGTH_SHORT).show();
+                        ad.setVisibility(View.INVISIBLE);
+                    } else {
+                        Toast.makeText(ctx, "Show Ads", Toast.LENGTH_SHORT).show();
+                        ad.setVisibility(View.VISIBLE);
                     }
                 }
             }
