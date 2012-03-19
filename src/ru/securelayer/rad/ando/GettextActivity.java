@@ -362,8 +362,6 @@ public class GettextActivity extends Activity
                     }
                 }
                 this.isCatalogReady = true;
-                // Show notification
-                showNotification(getString(R.string.resource_loaded));
                 // Show first page
                 this.index = position;
                 this.fillMsgWidgets(this.getNext(0, MSG_CURRENT));
