@@ -218,6 +218,21 @@ public class GettextActivity extends Activity
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+        final android.content.Intent intent = getIntent();
+
+        if (intent != null) {
+            final android.net.Uri data = intent.getData();
+            if (data != null) {
+                resourceFileName = data.getEncodedPath();
+                loadCatalog(resourceFileName);
+            }
+        }
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {

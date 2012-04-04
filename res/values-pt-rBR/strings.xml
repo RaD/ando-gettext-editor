@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Ando</string>
+    <string name="associate_name">Ando: Editor de recursos Gettext</string>
+
     <string name="resource_choose">... Clique no botão \'Menu\' ...</string>
     <string name="resource_ready_not">Sem recursos</string>
     <string name="resource_loaded">Recurso carregado</string>
@@ -33,7 +35,7 @@
         <![CDATA[
         <h1>
             <img src="icon">
-            Editor de recursos Gettext 
+            Editor de recursos Gettext
         </h1>
 
         <p> Com esse aplicativo você pode traduzir arquivos de recursos gettext usando o seu dispostivo Android. Ele permite a navegação em catálogos de mensagens, procurar por mensagens imprecisas ou não-traduzidas. Você pode marcar uma mensagem como imprecisa.</p>

@@ -22,7 +22,36 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+            <intent-filter  android:icon="@drawable/icon"
+                            android:label="@string/associate_name">
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <!-- <data android:mimeType="text/x-gettext-translation" /> -->
+                <data android:scheme="http"
+                      android:mimeType="*/*"
+                      android:host="*"
+                      android:pathPattern=".*\\.po" />
+                <data android:scheme="https"
+                      android:mimeType="*/*"
+                      android:host="*"
+                      android:pathPattern=".*\\.po" />
+                <data android:scheme="content"
+                      android:mimeType="*/*"
+                      android:host="*"
+                      android:pathPattern=".*\\.po" />
+                <data android:scheme="file"
+                      android:mimeType="*/*"
+                      android:host="*"
+                      android:pathPattern=".*\\.po" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/x-gettext-translation" />
+            </intent-filter>
+          </activity>
         <activity android:name="HelpActivity"
                   android:label="@string/help_name"
                   android:configChanges="orientation|keyboardHidden"
