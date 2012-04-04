@@ -35,10 +35,7 @@
     <string name="help_name">Help</string>
     <string name="help_text">
         <![CDATA[
-        <h1>
-            <img src="icon">
-            Gettext Resource Editor
-        </h1>
+        <h1>Gettext Resource Editor</h1>
 
         <p>With this application you can translate gettext resources with your Android device. It allows you to navigate in messages catalog, to search for untranslated or fuzzy messages. You can mark a message as fuzzy.</p>
 

@@ -33,10 +33,7 @@
     <string name="help_name">Ajuda</string>
     <string name="help_text">
         <![CDATA[
-        <h1>
-            <img src="icon">
-            Editor de recursos Gettext
-        </h1>
+        <h1>Editor de recursos Gettext</h1>
 
         <p> Com esse aplicativo você pode traduzir arquivos de recursos gettext usando o seu dispostivo Android. Ele permite a navegação em catálogos de mensagens, procurar por mensagens imprecisas ou não-traduzidas. Você pode marcar uma mensagem como imprecisa.</p>
 
