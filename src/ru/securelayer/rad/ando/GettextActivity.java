@@ -377,8 +377,12 @@ public class GettextActivity extends Activity
                     }
                 }
                 this.isCatalogReady = true;
-                // Show first page
-                this.index = position;
+                // Position in catalog
+                if (position > this.messages.size()) {
+                    this.index = 0;
+                } else {
+                    this.index = position;
+                }
                 this.fillMsgWidgets(this.getNext(0, MSG_CURRENT));
             } catch(FileNotFoundException ex) {}
         } catch(IOException ex) {}
