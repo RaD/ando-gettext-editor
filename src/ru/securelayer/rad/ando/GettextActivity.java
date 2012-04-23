@@ -19,7 +19,6 @@ import android.view.Window;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.EditText;
@@ -32,9 +31,6 @@ import android.gesture.Prediction;
 import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 
 import com.kaloer.filepicker.FilePickerActivity;
-import com.google.ads.AdView;
-import com.google.ads.AdSize;
-import com.google.ads.AdRequest;
 import org.fedorahosted.tennera.jgettext.Catalog;
 import org.fedorahosted.tennera.jgettext.Message;
 import org.fedorahosted.tennera.jgettext.catalog.parse.ExtendedCatalogParser;
@@ -64,7 +60,6 @@ public class GettextActivity extends Activity
 
     private TextView widgetMsgId = null;
     private EditText widgetMsgStr = null;
-    private AdView adView = null;
 
     private String resourceFileName = null;
     private Catalog catalog = null;
@@ -100,23 +95,6 @@ public class GettextActivity extends Activity
         widgetMsgStr = (EditText) findViewById(R.id.wMsgStr);
         widgetMsgStr.addTextChangedListener(this);
 
-        final View activityRootView = findViewById(R.id.main_layout);
-        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
-            new OnGlobalLayoutListener() {
-
-                @Override
-                public void onGlobalLayout() {
-                    Context ctx = getApplicationContext();
-                    int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
-                    if (heightDiff > 100) {
-                        hideAdv();
-                    } else {
-                        showAdv();
-                    }
-                }
-            }
-        );
-
         this.messages = new ArrayList<Message>();
 
         this.mLibrary = GestureLibraries.fromRawResource(this, R.raw.gestures);
@@ -128,23 +106,6 @@ public class GettextActivity extends Activity
 
         String title = (String) getTitle() + ": " + getString(R.string.resource_choose);
         setTitle(title);
-    }
-
-    protected void showAdv() {
-        if (this.adView == null) {
-            this.adView = new AdView(this, AdSize.BANNER, getString(R.string.admob_publisher_id));
-            LinearLayout layout = (LinearLayout) findViewById(R.id.main_layout);
-            layout.addView(adView);
-            adView.loadAd(new AdRequest());
-        }
-    }
-
-    protected void hideAdv() {
-        if (this.adView != null) {
-            this.adView.destroy();
-            this.adView.setVisibility(View.GONE);
-            this.adView = null;
-        }
     }
 
     @Override
@@ -187,12 +148,6 @@ public class GettextActivity extends Activity
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void onDestroy() {
-        this.hideAdv();
-        super.onDestroy();
     }
 
     /**
