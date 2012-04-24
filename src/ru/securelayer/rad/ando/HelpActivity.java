@@ -8,6 +8,7 @@ import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 
 import ru.securelayer.rad.ando.R;
@@ -24,9 +25,23 @@ public class HelpActivity extends Activity {
 
         getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.icon);
 
-        TextView helpText = (TextView) findViewById(R.id.help_text);
+        String title = (String) getString(R.string.help_name) + ": " + getVersion(this);
+        setTitle(title);
 
+        TextView helpText = (TextView) findViewById(R.id.help_text);
         helpText.setText(Html.fromHtml(getString(R.string.help_text), this.imgGetter, null));
+    }
+
+    public static String getVersion(Context context) {
+        String version = "unknown";
+        try {
+            version = context.getPackageManager().getPackageInfo(
+                context.getPackageName(), 0
+                ).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            version = "undeterminated";
+        }
+        return version;
     }
 
     private ImageGetter imgGetter = new ImageGetter() {

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.securelayer.rad.ando"
     android:versionCode="3"
-    android:versionName="1.2"
+    android:versionName="GIT_VERSION_HERE"
     android:installLocation="preferExternal">
     <uses-sdk android:minSdkVersion="8"
               android:targetSdkVersion="10"

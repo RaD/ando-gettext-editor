@@ -48,18 +48,41 @@
 
 <!-- extension targets. Uncomment the ones where you want to do custom work
      in between standard targets -->
-<!--
-    <target name="-pre-build">
+    <target name="-pre-build" depends="git.revision"/>
+
+    <available file=".git" type="dir" property="git.present" />
+
+    <target name="git.revision" if="git.present"
+        description="Store git revision in ${repository.version}">
+        <exec executable="git" outputproperty="revision_value"
+              failifexecutionfails="false" errorproperty="">
+            <arg line="describe --tags --always --abbrev=4"/>
+        </exec>
+        <echo message="Repository version is ${revision_value}" />
+        <replaceregexp file="AndroidManifest.xml"
+            match='android:versionName="GIT_VERSION_HERE"'
+            replace='android:versionName="${revision_value}"'
+        />
     </target>
+
+<!--
     <target name="-pre-compile">
     </target>
 
     /* This is typically used for code obfuscation.
        Compiled code location: ${out.classes.absolute.dir}
        If this is not done in place, override ${out.dex.input.absolute.dir} */
-    <target name="-post-compile">
-    </target>
+    <target name="-post-compile" depends="git.clean"/>
 -->
+
+    <target name="git.clean" if="git.present"
+        description="Restore template for git revision">
+        <echo message="Restore revision template" />
+        <replaceregexp file="AndroidManifest.xml"
+            match='android:versionName="[^"]+"'
+            replace='android:versionName="GIT_VERSION_HERE"'
+        />
+    </target>
 
     <!-- Import the actual build file.
 
