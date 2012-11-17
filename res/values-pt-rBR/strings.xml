@@ -91,6 +91,10 @@
             <img src="help_gestures_6">
             Ir para a mensagem imprecisa anterior no catálogo. O movimento é da direita para a direita.
         </p>
+        <p>For automatic translate please install google translate (https://play.google.com/store/apps/details?id=com.google.android.apps.translate)</p>
+                <p>List for translate settings: http://www.loc.gov/standards/iso639-2/php/code_list.php </p>
         ]]>
     </string>
+    <string name="error_io">Error: file is corrupted</string>
+    <string name="menu_translate">Перевести с помощью Google</string>
 </resources>

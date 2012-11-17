@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <EditTextPreference
+        android:key="key_language_from"
+        android:defaultValue="en"
+         android:title="@string/language_from"/>
+    <EditTextPreference android:key="key_language_to"
+        android:title="@string/key_language_to"
+        android:defaultValue="ru" />
+
+</PreferenceScreen>
