@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Ando</string>
     <string name="associate_name">Ando: Редактор ресурсов Gettext</string>
-
     <string name="resource_choose">... Откройте меню ...</string>
     <string name="resource_ready_not">Нет ресурса</string>
     <string name="resource_loaded">Ресурс загружен</string>
     <string name="resource_saved">Ресурс сохранён</string>
     <string name="resource_saved_not">Ресурс не сохранён</string>
-
     <string name="activity_resumed">Состояние восстановлено</string>
     <string name="activity_saved_not">Состояние не сохранено</string>
-
     <string name="no_token">Нет ресурса</string>
     <string name="next_token">Следующий перевод</string>
     <string name="prev_token">Предыдущий перевод</string>
@@ -21,18 +19,15 @@
     <string name="prev_token_trans">Предыдущее непереведённое сообщение</string>
     <string name="fuzzy_set">Перевод помечен как неточный</string>
     <string name="fuzzy_unset">Снята пометка неточного перевода</string>
-
     <string name="fuzzy_exist_no">Больше нет неточных переводов</string>
     <string name="trans_exist_no">Больше нет непереведённых сообщений</string>
-
     <string name="menu_open">Открыть</string>
     <string name="menu_copy">Скопировать</string>
     <string name="menu_fuzzy">Неточный</string>
     <string name="menu_help">Помощь</string>
-
     <string name="help_name">Помощь</string>
     <string name="help_text">
-        <![CDATA[
+<![CDATA[
         <h1>Редактор ресурсов Gettext</h1>
 
         <p>Используя это приложение, вы можете переводить ресурсы Gettext с помощью вашего устройства под управлением ОС Android. Приложение позволяет перемещаться по каталогу сообщений, искать непереведённые или неточно переведённые сообщения. Вы можете помечать сообщение, как неточно переведённое.</p>
@@ -87,6 +82,15 @@
 
         <p><img src="help_gestures_6"></p>
         <p>Перейти к предыдущему неточно переведённому сообщению в каталоге. Направление справа налево.</p>
+        <p>Для автоматизации перевода, пожалуйста установите гугл-переводчик (https://play.google.com/store/apps/details?id=com.google.android.apps.translate)</p>
+        <p>Список буквенных обозначений языков: http://www.loc.gov/standards/iso639-2/php/code_list.php </p>
         ]]>
     </string>
+    <string name="error_io">Файл заблокирован или поврежден или имеет некорректный формат</string>
+    <string name="menu_translate">Google-переводчик</string>
+    <string name="menu_settings">настройки</string>
+    <string name="key_language_to">Перевод на</string>
+    <string name="language_from">Перевод с</string>
+    <string name="translater_not_found">Google-переводчик не найден. Пожалуйста, посмотрите помощь.</string>
+
 </resources>

@@ -1,5 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    android:name="Context Menu">
+    android:name="Context Menu" >
+
     <item
         android:id="@+id/menu_open"
         android:title="@string/menu_open">
@@ -16,4 +17,13 @@
         android:id="@+id/menu_help"
         android:title="@string/menu_help">
     </item>
+    <item
+        android:id="@+id/menu_translate"
+        android:title="@string/menu_translate">
+    </item>
+    <item
+        android:id="@+id/menu_settings"
+        android:title="@string/menu_settings">
+    </item>
+
 </menu>
