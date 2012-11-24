@@ -5,9 +5,8 @@
     android:versionCode="3"
     android:versionName="GIT_VERSION_HERE"
     android:installLocation="preferExternal">
-    <uses-sdk android:minSdkVersion="8"
-              android:targetSdkVersion="10"
-              android:maxSdkVersion="15" />
+    <uses-sdk android:minSdkVersion="9"
+              android:targetSdkVersion="10"/>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
