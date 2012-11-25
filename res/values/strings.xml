@@ -88,6 +88,12 @@
 
         <p><img src="help_gestures_6"></p>
         <p>Go to the previous fuzzy message of the catalog. Direction is right to left.</p>
+        <p>For automatic translate please install google translate (https://play.google.com/store/apps/details?id=com.google.android.apps.translate)</p>
+        <p>List for translate settings: http://www.loc.gov/standards/iso639-2/php/code_list.php </p>
         ]]>
     </string>
+    <string name="menu_settings">Settings</string>
+    <string name="key_language_to">Translate to</string>
+    <string name="language_from">Translate from</string>
+    <string name="error_io">Error: file is corrupted</string>
 </resources>

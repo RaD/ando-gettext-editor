@@ -315,6 +315,7 @@ public class GettextActivity extends Activity
     protected void loadCatalog(String fileName) {
         this.loadCatalogSeek(fileName, 0);
     }
+
     protected void loadCatalogSeek(String fileName, int position) {
         this.catalog = null;
         this.messages.clear();
@@ -331,7 +332,7 @@ public class GettextActivity extends Activity
                 this.catalog = parser.getCatalog();
                 // Iterate of file's items.
                 for (Message m : this.catalog) {
-                    if (! m.isHeader()) {
+                    if (!m.isHeader()) {
                         this.messages.add(m);
                     }
                 }
@@ -342,9 +343,18 @@ public class GettextActivity extends Activity
                 } else {
                     this.index = position;
                 }
-                this.fillMsgWidgets(this.getNext(0, MSG_CURRENT));
-            } catch(FileNotFoundException ex) {}
-        } catch(IOException ex) {}
+                if(messages.size() != 0)
+                    this.fillMsgWidgets(this.getNext(0, MSG_CURRENT));
+                else
+                    Toast.makeText(this, R.string.error_io, Toast.LENGTH_LONG).show();
+            } catch (FileNotFoundException ex) {
+                
+            }
+        } catch (IOException ex) {
+            Toast.makeText(this, R.string.error_io, Toast.LENGTH_LONG).show();
+        } catch (UnexpectedTokenException ex) {
+            Toast.makeText(this, R.string.error_io, Toast.LENGTH_LONG).show();
+        }
     }
 
     /**

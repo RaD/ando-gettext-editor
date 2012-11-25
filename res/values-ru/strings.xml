@@ -92,6 +92,7 @@
         <p>Список буквенных обозначений языков: http://www.loc.gov/standards/iso639-2/php/code_list.php </p>
         ]]>
     </string>
+    <string name="error_io">Файл заблокирован или поврежден или имеет некорректный формат</string>
     <string name="menu_settings">настройки</string>
     <string name="key_language_to">Перевод на</string>
     <string name="language_from">Перевод с</string>
