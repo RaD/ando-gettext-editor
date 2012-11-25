@@ -54,5 +54,6 @@
                   android:configChanges="orientation|keyboardHidden"
                   />
         <activity android:name="com.kaloer.filepicker.FilePickerActivity" />
+        <activity android:name="Settings"></activity>
     </application>
 </manifest>

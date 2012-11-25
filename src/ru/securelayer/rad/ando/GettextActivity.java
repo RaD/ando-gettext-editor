@@ -227,6 +227,10 @@ public class GettextActivity extends Activity
             case R.id.menu_help:
                 this.showHelp();
                 return true;
+            case R.id.menu_settings:
+                Intent intent = new Intent(this,Settings.class);
+                startActivityForResult(intent, Settings.REQUESTCODE);
+                break;
         }
         return false;
     }
