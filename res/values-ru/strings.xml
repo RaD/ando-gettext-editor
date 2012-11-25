@@ -87,7 +87,6 @@
 
         <p><img src="help_gestures_6"></p>
         <p>Перейти к предыдущему неточно переведённому сообщению в каталоге. Направление справа налево.</p>
-        <p>Перейти к предыдущему неточно переведённому сообщению в каталоге. Направление справа налево.</p>
         <p>Для автоматизации перевода, пожалуйста установите гугл-переводчик (https://play.google.com/store/apps/details?id=com.google.android.apps.translate)</p>
         <p>Список буквенных обозначений языков: http://www.loc.gov/standards/iso639-2/php/code_list.php </p>
         ]]>
@@ -96,4 +95,7 @@
     <string name="menu_settings">настройки</string>
     <string name="key_language_to">Перевод на</string>
     <string name="language_from">Перевод с</string>
+    <string name="menu_translate">Google-переводчик</string>
+    <string name="translater_not_found">Google-переводчик не найден. Пожалуйста, посмотрите помощь.</string>
+
 </resources>

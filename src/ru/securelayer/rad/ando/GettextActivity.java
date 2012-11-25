@@ -78,6 +78,8 @@ public class GettextActivity extends Activity
     private int msgTrans = 0;
     private int msgFuzzy = 0;
     private int msgTrash = 0;
+    private String languageFrom;
+    private String languageTo;
 
     /** Called when the activity is first created. */
     @Override
@@ -106,6 +108,7 @@ public class GettextActivity extends Activity
 
         String title = (String) getTitle() + ": " + getString(R.string.resource_choose);
         setTitle(title);
+        loadPref();
     }
 
     @Override
@@ -231,21 +234,52 @@ public class GettextActivity extends Activity
                 Intent intent = new Intent(this,Settings.class);
                 startActivityForResult(intent, Settings.REQUESTCODE);
                 break;
+            case R.id.menu_translate:
+                this.translate();
+                break;
         }
         return false;
+    }
+    private void translate() {
+        if (this.token != null) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.putExtra("key_text_input", this.widgetMsgId.getText());
+            intent.putExtra("key_text_output", "");
+            intent.putExtra("key_language_from", languageFrom);
+            intent.putExtra("key_language_to", languageTo);
+            intent.putExtra("key_suggest_translation", "");
+            intent.putExtra("key_from_floating_window", false);
+            intent.setComponent(new ComponentName(
+                        "com.google.android.apps.translate",
+                        "com.google.android.apps.translate.translation.TranslateActivity"));
+            try{
+                startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(this, R.string.translater_not_found, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            switch(requestCode) {
-            case REQUEST_PICK_FILE:
+            if(requestCode == REQUEST_PICK_FILE) {
                 if (data.hasExtra(FilePickerActivity.EXTRA_FILE_PATH)) {
-                    resourceFileName = data.getStringExtra(FilePickerActivity.EXTRA_FILE_PATH);
-                    loadCatalog(resourceFileName);
+                     resourceFileName = data.getStringExtra(FilePickerActivity.EXTRA_FILE_PATH);
+                     loadCatalog(resourceFileName);
                 }
+            } else if(requestCode == Settings.REQUESTCODE) {
+                    loadPref();
             }
         }
+    }
+
+    private void loadPref() {
+    // load application settings from pref
+    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+    languageFrom = pref.getString("key_language_from", "en");
+    languageTo = pref.getString("key_language_to", "ru");
     }
 
     protected void chooseAndOpen() {

@@ -17,6 +17,10 @@
         android:title="@string/menu_help">
     </item>
     <item
+        android:id="@+id/menu_translate"
+        android:title="@string/menu_translate">
+    </item>
+    <item
         android:id="@+id/menu_settings"
         android:title="@string/menu_settings">
     </item>
