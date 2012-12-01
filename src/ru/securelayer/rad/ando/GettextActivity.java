@@ -7,7 +7,10 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -35,6 +38,7 @@ import org.fedorahosted.tennera.jgettext.Catalog;
 import org.fedorahosted.tennera.jgettext.Message;
 import org.fedorahosted.tennera.jgettext.catalog.parse.ExtendedCatalogParser;
 import org.fedorahosted.tennera.jgettext.catalog.parse.ParseException;
+import org.fedorahosted.tennera.jgettext.catalog.parse.UnexpectedTokenException;
 import org.fedorahosted.tennera.jgettext.PoWriter;
 import antlr.RecognitionException;
 import antlr.TokenStreamException;
