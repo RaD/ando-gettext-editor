@@ -7,7 +7,10 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -35,6 +38,7 @@ import org.fedorahosted.tennera.jgettext.Catalog;
 import org.fedorahosted.tennera.jgettext.Message;
 import org.fedorahosted.tennera.jgettext.catalog.parse.ExtendedCatalogParser;
 import org.fedorahosted.tennera.jgettext.catalog.parse.ParseException;
+import org.fedorahosted.tennera.jgettext.catalog.parse.UnexpectedTokenException;
 import org.fedorahosted.tennera.jgettext.PoWriter;
 import antlr.RecognitionException;
 import antlr.TokenStreamException;
@@ -78,6 +82,8 @@ public class GettextActivity extends Activity
     private int msgTrans = 0;
     private int msgFuzzy = 0;
     private int msgTrash = 0;
+    private String languageFrom;
+    private String languageTo;
 
     /** Called when the activity is first created. */
     @Override
@@ -106,6 +112,7 @@ public class GettextActivity extends Activity
 
         String title = (String) getTitle() + ": " + getString(R.string.resource_choose);
         setTitle(title);
+        loadPref();
     }
 
     @Override
@@ -227,21 +234,56 @@ public class GettextActivity extends Activity
             case R.id.menu_help:
                 this.showHelp();
                 return true;
+            case R.id.menu_settings:
+                Intent intent = new Intent(this,Settings.class);
+                startActivityForResult(intent, Settings.REQUESTCODE);
+                break;
+            case R.id.menu_translate:
+                this.translate();
+                break;
         }
         return false;
+    }
+    private void translate() {
+        if (this.token != null) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.putExtra("key_text_input", this.widgetMsgId.getText());
+            intent.putExtra("key_text_output", "");
+            intent.putExtra("key_language_from", languageFrom);
+            intent.putExtra("key_language_to", languageTo);
+            intent.putExtra("key_suggest_translation", "");
+            intent.putExtra("key_from_floating_window", false);
+            intent.setComponent(new ComponentName(
+                        "com.google.android.apps.translate",
+                        "com.google.android.apps.translate.translation.TranslateActivity"));
+            try{
+                startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(this, R.string.translater_not_found, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            switch(requestCode) {
-            case REQUEST_PICK_FILE:
+            if(requestCode == REQUEST_PICK_FILE) {
                 if (data.hasExtra(FilePickerActivity.EXTRA_FILE_PATH)) {
-                    resourceFileName = data.getStringExtra(FilePickerActivity.EXTRA_FILE_PATH);
-                    loadCatalog(resourceFileName);
+                     resourceFileName = data.getStringExtra(FilePickerActivity.EXTRA_FILE_PATH);
+                     loadCatalog(resourceFileName);
                 }
+            } else if(requestCode == Settings.REQUESTCODE) {
+                    loadPref();
             }
         }
+    }
+
+    private void loadPref() {
+    // load application settings from pref
+    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+    languageFrom = pref.getString("key_language_from", "en");
+    languageTo = pref.getString("key_language_to", "ru");
     }
 
     protected void chooseAndOpen() {
@@ -311,6 +353,7 @@ public class GettextActivity extends Activity
     protected void loadCatalog(String fileName) {
         this.loadCatalogSeek(fileName, 0);
     }
+
     protected void loadCatalogSeek(String fileName, int position) {
         this.catalog = null;
         this.messages.clear();
@@ -327,7 +370,7 @@ public class GettextActivity extends Activity
                 this.catalog = parser.getCatalog();
                 // Iterate of file's items.
                 for (Message m : this.catalog) {
-                    if (! m.isHeader()) {
+                    if (!m.isHeader()) {
                         this.messages.add(m);
                     }
                 }
@@ -338,9 +381,18 @@ public class GettextActivity extends Activity
                 } else {
                     this.index = position;
                 }
-                this.fillMsgWidgets(this.getNext(0, MSG_CURRENT));
-            } catch(FileNotFoundException ex) {}
-        } catch(IOException ex) {}
+                if(messages.size() != 0)
+                    this.fillMsgWidgets(this.getNext(0, MSG_CURRENT));
+                else
+                    Toast.makeText(this, R.string.error_io, Toast.LENGTH_LONG).show();
+            } catch (FileNotFoundException ex) {
+                
+            }
+        } catch (IOException ex) {
+            Toast.makeText(this, R.string.error_io, Toast.LENGTH_LONG).show();
+        } catch (UnexpectedTokenException ex) {
+            Toast.makeText(this, R.string.error_io, Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
